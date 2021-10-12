@@ -9,15 +9,17 @@ namespace ft
 	class Vector
 	{
 		private:
-			T		*_arr;
-			size_t	_sz;
-			size_t	_capacity;
+			T		*m_arr;
+			size_t	m_size;
+			size_t	m_capacity;
 		public:
-			Vector() : _arr(new T[0]), _sz(0), _capacity(0) {};
+			Vector() : m_arr(new T[0]), m_size(0), m_capacity(0) {};
 
 			~Vector()
 			{
-				delete[] _arr;
+				if (_size > 1)
+					delete[] m_arr;
+				delete m_arr;
 			}
 
 			Vector(const Vector<T> &other)
@@ -25,12 +27,32 @@ namespace ft
 				*this = other;
 			}
 
-			Vector &operator = (const Vector<T> &other)
+			Vector &operator = (const Vector<T> &other)/////
 			{
 				return (*this);
 			}
 
+			void resize(size_t n, const T &value = T())//////
+			{
 
+			}
+
+			size_t size() const
+			{
+				return (this->m_size);
+			}
+
+			size_t capacity() const
+			{
+				return (this->m_capacity);
+			}
+
+			bool empty() const
+			{
+				if (m_size >= 1)
+					return (false);
+				return (true);
+			}
 	};
 }
 

@@ -44,6 +44,8 @@ public:
 	iterator end() { return this->c.end(); }
 };
 
+#include "header/vector.hpp"
+
 int main(int argc, char** argv) {
 	// if (argc != 2)
 	// {
@@ -112,5 +114,31 @@ int main(int argc, char** argv) {
 	// 	std::cout << *it;
 	// }
 	// std::cout << std::endl;
+
+	Vector<int> i;
+	i.resize(12, 12);
+	//i.push_back(13);
+	i.pop_back();
+	std::cout << i.size() << std::endl;
+	std::cout << i.capacity() << std::endl;
+	// for (int a = 0; a < i.size(); ++a)
+	// {
+	// 	std::cout << a << ": "<< i[a] << std::endl;
+	// }
+	std::cout << i.max_size() << std::endl;
+	std::cout << i.data() << std::endl;
+	std::cout << "_________________________" << std::endl;
+	std::vector<int> iv;
+	iv.resize(12, 12);
+	//iv.push_back(13);
+	iv.pop_back();
+	std::cout << iv.size() << std::endl;
+	std::cout << iv.capacity() << std::endl;
+	// for (int a = 0; a < iv.size(); ++a)
+	// {
+	// 	std::cout << a << ": "<< iv[a] << std::endl;
+	// }
+	std::cout << iv.max_size() << std::endl;
+	std::cout << iv.data() << std::endl;
 	return (0);
 }

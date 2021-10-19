@@ -1,50 +1,51 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#include "header/vector.hpp"
+// #if 1 //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
-#else
-	#include <map.hpp>
-	#include <stack.hpp>
-	#include <vector.hpp>
-#endif
+// #else
+// 	#include <map.hpp>
+// 	#include <stack.hpp>
+// 	#include <vector.hpp>
+// #endif
 
-#include <stdlib.h>
+// #include <stdlib.h>
 
-#define MAX_RAM 4294967296
-#define BUFFER_SIZE 4096
-struct Buffer
-{
-	int idx;
-	char buff[BUFFER_SIZE];
-};
+// #define MAX_RAM 4294967296
+// #define BUFFER_SIZE 4096
+// struct Buffer
+// {
+// 	int idx;
+// 	char buff[BUFFER_SIZE];
+// };
 
 
-#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+// #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-template<typename T>
-class MutantStack : public ft::stack<T>
-{
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+// template<typename T>
+// class MutantStack : public ft::stack<T>
+// {
+// public:
+// 	MutantStack() {}
+// 	MutantStack(const MutantStack<T>& src) { *this = src; }
+// 	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+// 	{
+// 		this->c = rhs.c;
+// 		return *this;
+// 	}
+// 	~MutantStack() {}
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+// 	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+// 	iterator begin() { return this->c.begin(); }
+// 	iterator end() { return this->c.end(); }
+// };
 
-#include "header/vector.hpp"
+
 
 int main(int argc, char** argv) {
 	// if (argc != 2)
@@ -115,30 +116,30 @@ int main(int argc, char** argv) {
 	// }
 	// std::cout << std::endl;
 
-	Vector<int> i;
-	i.resize(12, 12);
+	//Vector<int> i;
+	//i.resize(12, 12);
 	//i.push_back(13);
-	i.pop_back();
-	std::cout << i.size() << std::endl;
-	std::cout << i.capacity() << std::endl;
+	// i.pop_back();
+	// std::cout << i.size() << std::endl;
+	// std::cout << i.capacity() << std::endl;
 	// for (int a = 0; a < i.size(); ++a)
 	// {
 	// 	std::cout << a << ": "<< i[a] << std::endl;
 	// }
-	std::cout << i.max_size() << std::endl;
-	std::cout << i.data() << std::endl;
+	// std::cout << i.max_size() << std::endl;
+	// std::cout << i.data() << std::endl;
 	std::cout << "_________________________" << std::endl;
-	std::vector<int> iv;
-	iv.resize(12, 12);
+	std::vector<int> iv(1, 2);
+	//iv.resize(12, 12);
 	//iv.push_back(13);
-	iv.pop_back();
-	std::cout << iv.size() << std::endl;
-	std::cout << iv.capacity() << std::endl;
-	// for (int a = 0; a < iv.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< iv[a] << std::endl;
-	// }
-	std::cout << iv.max_size() << std::endl;
-	std::cout << iv.data() << std::endl;
+	// iv.pop_back();
+	// std::cout << iv.size() << std::endl;
+	// std::cout << iv.capacity() << std::endl;
+	for (int a = 0; a < iv.size(); ++a)
+	{
+		std::cout << a << ": "<< iv[a] << std::endl;
+	}
+	// std::cout << iv.max_size() << std::endl;
+	// std::cout << iv.data() << std::endl;
 	return (0);
 }

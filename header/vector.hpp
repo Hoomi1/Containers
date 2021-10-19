@@ -2,13 +2,23 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include <alloca.h>
+#include <iterator>
 
-// namespace ft
-// {
-	template <typename T>
+namespace ft
+{
+	template < class T, class Alloc = std::allocator<T> >
 	class Vector
 	{
+		public:
+			typedef T														value_type;
+			typedef Alloc													allocator_type;
+			typedef typename allocator_type::reference						reference;
+			typedef typename allocator_type::pointer						pointer;
+			typedef typename allocator_type::const_pointer					const_pointer;
+			typedef ft::random_access_iterator_tag<value_type>				iterator;
+			typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
+			typedef typename allocator_type::size_type						size_type;
+			
 		private:
 			T		*m_arr;
 			size_t	m_size;
@@ -46,14 +56,25 @@
 				return (*this);
 			}
 
-			void reserve(size_t new_cap)
+			template <class InputIterator>
+			Vector(InputIterator first, InputIterator last)
 			{
-				T *new_arr = new T[new_cap];
-				for (int i = 0; i < this->m_size;++i)
-					new_arr[i] = this->m_arr[i];
-				this->m_capacity = new_cap;
-				delete[] m_arr;
-				this->m_arr = new_arr;
+
+			}
+
+			//begin
+			//end
+			//rbegin
+			//rend
+			
+			size_t size() const
+			{
+				return (this->m_size);
+			}
+
+			size_t max_size()const
+			{
+				return (4611686018427387903);
 			}
 
 			void resize(size_t n, const T &value = T())
@@ -67,15 +88,6 @@
 				this->m_size = n;
 			}
 
-			size_t size() const
-			{
-				return (this->m_size);
-			}
-
-			size_t max_size()const
-			{
-				return (4611686018427387903);
-			}
 			size_t capacity() const
 			{
 				return (this->m_capacity);
@@ -88,11 +100,25 @@
 				return (true);
 			}
 
-			void clear()
+			void reserve(size_t new_cap)
 			{
-				this->m_size = 0;
-				this->m_arr = 0;
+				T *new_arr = new T[new_cap];
+				for (int i = 0; i < this->m_size;++i)
+					new_arr[i] = this->m_arr[i];
+				this->m_capacity = new_cap;
+				delete[] m_arr;
+				this->m_arr = new_arr;
 			}
+
+			T &operator [] (size_t pos)
+			{
+				return (this->m_arr[pos]);
+			}
+
+			//at
+			//front
+			//back
+			//assign
 
 			void push_back( const T& value)
 			{
@@ -107,19 +133,16 @@
 				--this->m_size;
 			}
 
-			T* data()
+			//insert
+			//erase
+			//swap
+
+			void clear()
 			{
-				return (this->m_arr);
-			}
-
-
-
-//////////////////////////////////////////////////////
-			T &operator [] (size_t pos)
-			{
-				return (this->m_arr[pos]);
+				this->m_size = 0;
+				this->m_arr = 0;
 			}
 	};
-//}
+}
 
 #endif

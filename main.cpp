@@ -6,7 +6,7 @@
 	#include <map>
 	#include <stack>
 	#include <vector>
-	namespace ft = std;
+	//namespace ft = std;
 // #else
 // 	#include <map.hpp>
 // 	#include <stack.hpp>
@@ -116,7 +116,10 @@ int main(int argc, char** argv) {
 	// }
 	// std::cout << std::endl;
 
-	//Vector<int> i;
+	// ft::Vector<int> i(13, 5);
+	// ft::Vector<int>::iterator it_f;
+	// ft::Vector<int>::iterator it_e;
+	// ft::Vector<int> i(it_f, it_e);
 	//i.resize(12, 12);
 	//i.push_back(13);
 	// i.pop_back();
@@ -129,12 +132,15 @@ int main(int argc, char** argv) {
 	// std::cout << i.max_size() << std::endl;
 	// std::cout << i.data() << std::endl;
 	std::cout << "_________________________" << std::endl;
-	std::vector<int> iv(1, 2);
+	std::vector<int> i(13, 5);
+	std::vector<int>::iterator it1 = i.begin();
+	std::vector<int>::iterator it2 = i.end();
+	std::vector<int> iv(it1, it2);
 	//iv.resize(12, 12);
 	//iv.push_back(13);
 	// iv.pop_back();
-	// std::cout << iv.size() << std::endl;
-	// std::cout << iv.capacity() << std::endl;
+	std::cout << iv.size() << std::endl;
+	std::cout << iv.capacity() << std::endl;
 	for (int a = 0; a < iv.size(); ++a)
 	{
 		std::cout << a << ": "<< iv[a] << std::endl;

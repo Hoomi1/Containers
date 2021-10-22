@@ -35,22 +35,12 @@ namespace ft
 
 			VectorIterator(pointer ptr) : m_Ptr(ptr){}
 
-			bool &operator == (const VectorIterator &other)
+			bool operator == (const VectorIterator &other) const
 			{
 				return (this->m_Ptr == other.m_Ptr);
 			}
 
-			bool &operator == (const VectorIterator &other) const
-			{
-				return (this->m_Ptr == other.m_Ptr);
-			}
-
-			bool &operator != (const VectorIterator &other)
-			{
-				return (this->m_Ptr != other.m_Ptr);
-			}
-
-			bool &operator != (const VectorIterator &other) const
+			bool operator != (const VectorIterator &other) const
 			{
 				return (this->m_Ptr != other.m_Ptr);
 			}
@@ -188,7 +178,7 @@ namespace ft
 			m_alloc(alloc),
 			m_arr(new value_type[0]),
 			m_size(0),
-			m_capacity(1){}
+			m_capacity(0){}
 		/////
 			Vector(size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type()) :
@@ -206,14 +196,16 @@ namespace ft
 				}
 				this->m_size = n;
 			}
-		/////
-			Vector(iterator first, iterator last,
-						const allocator_type& alloc = allocator_type()) :
-			m_alloc(alloc)
-			{
+
+		/////				custom				/////
+			// Vector(iterator first, iterator last,
+			// 			const allocator_type& alloc = allocator_type()) :
+			// m_alloc(alloc)
+			// {
 				
-			}
-		/////
+			// }
+		/////				custom				/////
+
 			Vector(const Vector &other) :
 			m_alloc(other.m_alloc),
 			m_arr(new value_type[this->m_capacity]),///////////
@@ -245,15 +237,24 @@ namespace ft
 
 			iterator begin()
 			{
-
+				return (iterator(this->m_arr));
 			}
 
 			const_iterator begin() const
 			{
-
+				return (const_iterator(this->m_arr));
 			}
-			//begin
-			//end
+
+			iterator end()
+			{
+				return (iterator(&(this->m_arr[this->m_size])));
+			}
+
+			const_iterator end() const
+			{
+				return (const_iterator(&(this->m_arr[this->m_size])));
+			}
+
 			//rbegin
 			//rend
 			
@@ -305,9 +306,51 @@ namespace ft
 				return (*(this->m_arr + pos));
 			}
 
-			//at
-			//front
-			//back
+			reference at (size_type n)
+			{
+				if (n < 0 || n >= this->m_size)
+					throw std::out_of_range("vector");
+				return (reference(*(this->m_arr + n)));
+			}
+
+			const_reference at (size_type n) const
+			{
+				if (n < 0 || n >= this->m_size)
+					throw std::out_of_range("vector");
+				return (const_reference(*(this->m_arr + n)));
+			}
+
+			reference front()
+			{
+				return (*(this->m_arr + 0));
+			}
+
+			const_reference front() const
+			{
+				return (*(this->m_arr + 0));
+			}
+
+			reference back()
+			{
+				return (*(this->m_arr + (this->m_size - 1)));
+			}
+
+			const_reference back() const
+			{
+				return (*(this->m_arr + (this->m_size - 1)));
+			}
+
+			template <class InputIterator>
+			void assign (InputIterator first, InputIterator last)
+			{
+
+			}
+
+			void assign (size_type n, const value_type& val)
+			{
+
+			}
+			
 			//assign
 
 			void push_back(const_reference value)

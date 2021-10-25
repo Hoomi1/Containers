@@ -116,60 +116,67 @@ int main(int argc, char** argv) {
 	// }
 	// std::cout << std::endl;
 
-	ft::Vector<int> i;
+	ft::Vector<int> i(5, 10);
+
 	// ft::Vector<int>::iterator it_f = i.begin();
 	// ft::Vector<int>::iterator it_e = i.end();
 	// ft::Vector<int> i(it_f, it_e);
 	//i.resize(12, 12);
-	i.push_back(13);
-	i.push_back(50);
+	// i.push_back(13);
+	// i.push_back(50);
 	// i.pop_back();
 	// std::cout << i.size() << std::endl;
 	// std::cout << i.capacity() << std::endl;
-	try
-	{
-		i.back() -= i.front();
-		std::cout << i.back() << std::endl;
-	}
-	catch(const std::out_of_range& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
+	// try
+	// {
+	// 	i.back() -= i.front();
+	// 	std::cout << i.back() << std::endl;
+	// }
+	// catch(const std::out_of_range& e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
 	// for (int a = 0; it_f != it_e; ++it_f)
 	// {
 	// 	std::cout << a << ": "<< *it_f << std::endl;
 	// 	++a;
 	// }
-	// for (int a = 0; a < i.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< i[a] << std::endl;
-	// }
+	for (int a = 0; a < i.size(); ++a)
+	{
+		std::cout << a << ": "<< i[a] << std::endl;
+	}
+
 	// std::cout << i.max_size() << std::endl;
 	// std::cout << i.data() << std::endl;
 	std::cout << "_________________________" << std::endl;
 	std::vector<int> iv;
+	iv.push_back(1);
+	iv.push_back(2);
+	iv.push_back(3);
+	iv.push_back(4);
+	iv.push_back(5);
+	iv.push_back(6);	
 	//iv.resize(12, 12);
-	i.push_back(13);
-	i.push_back(50);
+	// i.push_back(13);
+	// i.push_back(50);
 	// iv.pop_back();
-	try
-	{
-		i.back() -= i.front();
-		std::cout << i.back() << std::endl;
-	}
-	catch(const std::out_of_range& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
+	// try
+	// {
+	// 	i.back() -= i.front();
+	// 	std::cout << i.back() << std::endl;
+	// }
+	// catch(const std::out_of_range& e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
 	
 	
 	// std::cout << iv.size() << std::endl;
 	// std::cout << iv.capacity() << std::endl;
-	// for (int a = 0; a < iv.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< iv[a] << std::endl;
-	// }
+	for (int a = 0; a < iv.size(); ++a)
+	{
+		std::cout << a << ": "<< iv[a] << std::endl;
+	}
 	// std::cout << iv.max_size() << std::endl;
-	// std::cout << iv.data() << std::endl;
 	return (0);
 }

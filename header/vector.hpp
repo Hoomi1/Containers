@@ -6,6 +6,7 @@
 
 namespace ft
 {
+
 	template <typename T>
 	class VectorIterator
 	{
@@ -365,10 +366,58 @@ namespace ft
 			{
 				--this->m_size;
 			}
+			///////////////////////////////////////////////////////////////////
+			iterator insert (iterator position, const value_type& val)////////
+			{
+
+			}
+
+			void insert (iterator position, size_type n, const value_type& val)///////
+			{
+
+			}
+
+			template <class InputIterator>
+			void insert (iterator position, InputIterator first, InputIterator last)///////
+			{
+
+			}
+
+			iterator erase (iterator position)/////
+			{
+				
+			}
+
+			iterator erase (iterator first, iterator last)///////
+			{
+
+			}
 
 			//insert
 			//erase
-			//swap
+			///////////////////////////////////////////////////////////////////
+			void swap (Vector& x)
+			{
+				allocator_type	m_alloc_new;
+				pointer			m_arr_new;
+				size_type		m_size_new;
+				size_type		m_capacity_new;
+
+				m_alloc_new = this->m_alloc;
+				m_arr_new = this->m_arr;
+				m_size_new = this->m_size;
+				m_capacity_new = this->m_capacity;
+
+				this->m_alloc = x.m_alloc;
+				this->m_arr = x.m_arr;
+				this->m_size = x.m_size;
+				this->m_capacity = x.m_capacity;
+
+				x.m_alloc = m_alloc_new;
+				x.m_arr = m_arr_new;
+				x.m_size = m_size_new;
+				x.m_capacity = m_capacity_new;
+			}
 
 			void clear()
 			{
@@ -376,6 +425,7 @@ namespace ft
 				this->m_arr = 0;
 			}
 	};
+	
 }
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iterator>
+#include "UtilsIterator/utils.hpp"
 
 namespace ft
 {
@@ -164,7 +165,8 @@ namespace ft
 			typedef typename allocator_type::const_pointer		const_pointer;
 			typedef VectorIterator<value_type>					iterator;
 			typedef VectorIterator<const value_type>			const_iterator;
-								//reverse_iterator;//
+			typedef ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef typename allocator_type::size_type			size_type;
 
 		private:

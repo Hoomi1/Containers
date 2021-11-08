@@ -58,11 +58,11 @@ namespace ft
 
 			explicit reverse_iterator(iterator_type x) : itr(x) {}
 
-			template<class Iter>
-			reverse_iterator(const reverse_iterator<Iter>& other) : itr(other.itr){}
+			template<class Iterator>
+			reverse_iterator(const reverse_iterator<Iterator>& other) : itr(other.itr){}
 
-			template<class Iter>
-			reverse_iterator& operator=(const reverse_iterator<Iter>& other)
+			template<class iterator>
+			reverse_iterator& operator=(const reverse_iterator<iterator>& other)
 			{
 				this->itr = other.base();
 				return (*this);
@@ -202,7 +202,7 @@ namespace ft
 		public:
 			typedef T1	first_type;
 			typedef T2	second_type;
-		protected:
+		public:
 			first_type	first;
 			second_type	second;
 		public:
@@ -242,8 +242,54 @@ namespace ft
 	{
 		return (ft::pair<T1,T2>(t, u));
 	}
+
+	template<class T1, class T2>
+	bool operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		if (lhs.first == rhs.first && lhs.second == rhs.second)
+			return (true);
+		else
+			return (false);
+	}
+
+	template< class T1, class T2>
+	bool operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template<class T1, class T2>
+	bool operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		if (lhs.first < rhs.first)
+			return (true);
+		else if (rhs.first < lhs.first)
+			return (false);
+		else if (lhs.second < rhs.second)
+			return (true);
+		else
+			return (false);
+	}
+
+	template<class T1, class T2>
+	bool operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (!(rhs < lhs));
+	}
+
+	template<class T1, class T2>
+	bool operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template<class T1, class T2>
+	bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (!(lhs < rhs));
+	}
 	////////////////////////////////////////////////////////////
-	////////////////////// *is_integral* //////////////////////
+	////////////////////// *is_integral* //////////////////////???????????????????????
 	template< class T >
 	struct is_integral
 	{

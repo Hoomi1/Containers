@@ -118,9 +118,12 @@ int main(int argc, char** argv) {
 	// std::cout << std::endl;
 
 	ft::Vector<int> i(5, 10);
+	ft::Vector<int> j(5, 10);
+	i.push_back(5);
 
-	// ft::Vector<int>::iterator it_f = i.begin();
+	//ft::Vector<int>::reverse_iterator it_f = i.rbegin();
 	// ft::Vector<int>::iterator it_e = i.end();
+	//std::cout << *it_f << std::endl;
 	// ft::Vector<int> i(it_f, it_e);
 	//i.resize(12, 12);
 	// i.push_back(13);
@@ -142,21 +145,30 @@ int main(int argc, char** argv) {
 	// 	std::cout << a << ": "<< *it_f << std::endl;
 	// 	++a;
 	// }
-	for (int a = 0; a < i.size(); ++a)
-	{
-		std::cout << a << ": "<< i[a] << std::endl;
-	}
+	// for (int a = 0; a < i.size(); ++a)
+	// {
+	// 	std::cout << a << ": "<< i[a] << std::endl;
+	// }
 
 	// std::cout << i.max_size() << std::endl;
 	// std::cout << i.data() << std::endl;
 	std::cout << "_________________________" << std::endl;
-	std::vector<int> iv;
-	iv.push_back(1);
-	iv.push_back(2);
-	iv.push_back(3);
-	iv.push_back(4);
+	std::vector<int> iv(5, 10);
+	std::vector<int> jv(5, 10);
 	iv.push_back(5);
-	iv.push_back(6);	
+	std::vector<int>::reverse_iterator it_fv = iv.rbegin();
+	std::cout << *it_fv << std::endl;
+	// std::vector<int>::iterator it_ev = iv.end();
+	// for (int a = 0; it_fv != it_ev; ++it_fv)
+	// {
+	// 	std::cout << a << ": "<< *it_fv << std::endl;
+	// 	++a;
+	// }
+	// iv.push_back(2);
+	// iv.push_back(3);
+	// iv.push_back(4);
+	// iv.push_back(5);
+	// iv.push_back(6);	
 	//iv.resize(12, 12);
 	// i.push_back(13);
 	// i.push_back(50);
@@ -174,10 +186,10 @@ int main(int argc, char** argv) {
 	
 	// std::cout << iv.size() << std::endl;
 	// std::cout << iv.capacity() << std::endl;
-	for (int a = 0; a < iv.size(); ++a)
-	{
-		std::cout << a << ": "<< iv[a] << std::endl;
-	}
+	// for (int a = 0; a < iv.size(); ++a)
+	// {
+	// 	std::cout << a << ": "<< iv[a] << std::endl;
+	// }
 	// std::cout << iv.max_size() << std::endl;
 	return (0);
 }

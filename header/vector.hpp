@@ -165,6 +165,7 @@ namespace ft
 			typedef value_type const*	const_pointer;
 			typedef value_type&			reference;
 			typedef value_type const&	const_reference;
+			typedef std::ptrdiff_t		difference_type;
 		private:
 			pointer m_Ptr;
 		public:
@@ -311,8 +312,12 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer			pointer;
 			typedef typename allocator_type::const_pointer		const_pointer;
-			typedef VectorIterator<value_type>					iterator;
+			typedef VectorIterator<value_type>				iterator;
 			typedef VectorIterator<const value_type>			const_iterator;
+
+			//typedef ft::random_access_iterator<value_type>			iterator;
+			//typedef ft::random_access_iterator<const value_type>	const_iterator;
+
 			typedef ft::reverse_iterator<iterator>				reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef typename allocator_type::size_type			size_type;
@@ -408,16 +413,23 @@ namespace ft
 
 			reverse_iterator rbegin()
 			{
-				return (reverse_iterator(this->m_arr));
+				return (reverse_iterator(this->end()));
 			}
 
 			const_reverse_iterator rbegin() const
 			{
-				return (const_reverse_iterator(this->m_arr));
+				return (const_reverse_iterator(this->end()));
 			}
 
-			//rbegin
-			//rend
+			reverse_iterator rend()
+			{
+				return (reverse_iterator(this->begin()));
+			}
+
+			const_reverse_iterator rend() const
+			{
+				return (const_reverse_iterator(this->begin()));
+			}
 			
 			size_type size() const
 			{
@@ -435,7 +447,7 @@ namespace ft
 					reserve(n);
 				for (int i = this->m_size; i < n; ++i)
 				{
-					this->m_arr[i] = T(value);
+					this->m_arr[i] = value_type(value);
 				}
 				this->m_size = n;
 			}
@@ -501,24 +513,23 @@ namespace ft
 				return (*(this->m_arr + (this->m_size - 1)));
 			}
 
+			void assign (size_type n, const value_type& val)///////
+			{
+				
+			}
+
 			template <class InputIterator>
-			void assign (InputIterator first, InputIterator last)
+			void assign (InputIterator first, InputIterator last)/////////
 			{
-
+				
 			}
-
-			void assign (size_type n, const value_type& val)
-			{
-
-			}
-			
 			//assign
 
 			void push_back(const_reference value)
 			{
 				if (this->m_size >= this->m_capacity)
 					reserve(this->m_capacity * 2);
-				this->m_arr[m_size] = T(value);
+				this->m_arr[m_size] = value_type(value);
 				++m_size;
 			}
 

@@ -2,12 +2,24 @@
 #define ITERATOR_HPP
 
 #include <iostream>
-//#include <iterator>
+#include <iterator>
 namespace ft
 {
 	struct random_access_iterator_tag
 	{
 
+	};
+
+	template<class Category, class T, class Distance = std::ptrdiff_t,
+			class Pointer = T*, class Reference = T&>
+	class iterator//////////////////
+	{
+		public:
+		Category	iterator_category;
+		T			value_type;
+		Distance		difference_type;
+		Pointer		pointer;
+		Reference	reference;
 	};
 	///////////////////// *iterator_traits* /////////////////////
 	template<class Iter>
@@ -42,7 +54,12 @@ namespace ft
 	////////////////////////////////////////////////////////////
 	//////////////////// *reverse_iterator* ////////////////////
 	template<class Iter>
-	class reverse_iterator
+	class reverse_iterator : public ft::iterator<
+							typename ft::iterator_traits<Iter>::iterator_category,
+							typename ft::iterator_traits<Iter>::value_type,
+							typename ft::iterator_traits<Iter>::difference_type,
+							typename ft::iterator_traits<Iter>::pointer,
+							typename ft::iterator_traits<Iter>::reference >
 	{
 		public:
 			typedef Iter													iterator_type;

@@ -124,8 +124,7 @@ int main(int argc, char** argv) {
 	i.push_back(-500);
 	i.push_back(1);
 	i.push_back(100);
-	ft::Vector<int>::reverse_iterator it = i.rbegin() + 2;
-	std::cout << *it << std::endl;
+	i.assign(2, 5);
 	//ft::Vector<int>::reverse_iterator it_f = i.rend() - 1;
 	// ft::Vector<int>::iterator it_e = i.end();
 	// ft::Vector<int> i(it_f, it_e);
@@ -149,11 +148,11 @@ int main(int argc, char** argv) {
 	// 	std::cout << a << ": "<< *it_f << std::endl;
 	// 	++a;
 	// }
-	// for (int a = 0; a < i.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< i[a] << std::endl;
-	// }
-
+	for (int a = 0; a < i.size(); ++a)
+	{
+		std::cout << a << ": "<< i[a] << std::endl;
+	}
+	std::cout << i.max_size() << std::endl;
 	// std::cout << i.max_size() << std::endl;
 	// std::cout << i.data() << std::endl;
 	std::cout << "_________________________" << std::endl;
@@ -164,8 +163,8 @@ int main(int argc, char** argv) {
 	iv.push_back(-500);
 	iv.push_back(1);
 	iv.push_back(100);
-	std::vector<int>::reverse_iterator it_fv = iv.rbegin() + 2;
-	std::cout << *it_fv << std::endl;
+	iv.assign(2, 5);
+	std::cout << iv.max_size() << std::endl;
 	// std::vector<int>::iterator it = iv.begin();
 	// std::vector<int>::iterator it2 = iv.end();
 	// jv.assign(5, 1);
@@ -197,10 +196,10 @@ int main(int argc, char** argv) {
 	
 	// std::cout << iv.size() << std::endl;
 	// std::cout << iv.capacity() << std::endl;
-	// for (int a = 0; a < jv.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< jv[a] << std::endl;
-	// }
+	for (int a = 0; a < iv.size(); ++a)
+	{
+		std::cout << a << ": "<< iv[a] << std::endl;
+	}
 	// std::cout << iv.max_size() << std::endl;
 	return (0);
 }

@@ -11,11 +11,11 @@ namespace ft
 	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
 		public:
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type value_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type difference_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category iterator_category;
-			typedef T* pointer;
-			typedef T& reference;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
+			typedef	T* pointer;
+			typedef	T& reference;
 		private:
 			pointer m_Ptr;
 		public:
@@ -36,33 +36,33 @@ namespace ft
 
 			random_access_iterator(pointer ptr) : m_Ptr(ptr){}
 
-			bool operator == (const random_access_iterator &other) const
+			bool operator==(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr == other.m_Ptr);
 			}
 
-			bool operator != (const random_access_iterator &other) const
+			bool operator!=(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr != other.m_Ptr);
 			}
 
-			reference operator * () const
+			reference operator*() const
 			{
 				return (*this->m_Ptr);
 			}
 
-			pointer operator -> () const
+			pointer operator->() const
 			{
 				return (this->m_Ptr);
 			}
 
-			random_access_iterator &operator ++ ()
+			random_access_iterator &operator++()
 			{
 				++this->m_Ptr;
 				return (*this);
 			}
 
-			random_access_iterator operator ++ (int)
+			random_access_iterator operator++(int)
 			{
 				random_access_iterator vi(*this);
 				++this->m_Ptr;
@@ -71,13 +71,13 @@ namespace ft
 
 			//*a++
 
-			random_access_iterator &operator -- ()
+			random_access_iterator &operator--()
 			{
 				--this->m_Ptr;
 				return (*this);
 			}
 
-			random_access_iterator operator -- (int)
+			random_access_iterator operator--(int)
 			{
 				random_access_iterator vi(*this);
 				--this->m_Ptr;
@@ -96,39 +96,39 @@ namespace ft
 				return (this->m_Ptr - _num);
 			}
 
-			bool &operator > (const random_access_iterator &other) const
+			bool &operator>(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr > other.m_Ptr);
 			}
 
-			bool &operator < (const random_access_iterator &other) const
+			bool &operator<(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr < other.m_Ptr);
 			}
 
-			bool &operator >= (const random_access_iterator &other) const
+			bool &operator>=(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr >= other.m_Ptr);
 			}
 
-			bool &operator <= (const random_access_iterator &other) const
+			bool &operator<=(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr <= other.m_Ptr);
 			}
 
-			random_access_iterator &operator += (difference_type _num)
+			random_access_iterator &operator+=(difference_type _num)
 			{
 				this->m_Ptr += _num;
 				return (*this);
 			}
 
-			random_access_iterator &operator -= (difference_type _num)
+			random_access_iterator &operator-=(difference_type _num)
 			{
 				this->m_Ptr -= _num;
 				return (*this);
 			}
 
-			reference operator [] (size_t pos) const
+			reference operator [](size_t pos) const
 			{
 				return (*(this->m_arr + pos));
 			}
@@ -296,7 +296,6 @@ namespace ft
 
 			typedef ft::random_access_iterator<value_type>			iterator;
 			typedef ft::random_access_iterator<const value_type>	const_iterator;
-
 			typedef ft::reverse_iterator<iterator>				reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 			typedef typename allocator_type::size_type			size_type;
@@ -417,7 +416,7 @@ namespace ft
 
 			size_type max_size()const
 			{
-				return (4611686018427387903);
+				return (allocator_type().max_size());
 			}
 
 			void resize(size_type n, const value_type &value = value_type())
@@ -494,13 +493,16 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)///////
 			{
+				for (int i = 0; i < this->m_size; ++i)
+					this->m_alloc.destroy(&this->m_arr[i]);
 				
 			}
 
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last)/////////
 			{
-				
+				for (int i = 0; i < this->m_size; ++i)
+					this->m_alloc.destroy(&this->m_arr[i]);
 			}
 			//assign
 

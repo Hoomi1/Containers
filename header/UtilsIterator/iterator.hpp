@@ -321,9 +321,46 @@ namespace ft
 		return (!(lhs < rhs));
 	}
 	////////////////////////////////////////////////////////////
-	////////////////////// *is_integral* //////////////////////???????????????????????
+	////////////////////// *is_integral* //////////////////////
+	template <class T, T _value>
+	struct integral_constant
+	{
+		typedef T value_type;
+		static const T value = _value;
+	};
+
+	typedef ft::integral_constant<bool,true> true_type;
+	typedef ft::integral_constant<bool,false> false_type;
+
+	template <typename>
+	struct is_type : public false_type {};
+	template <>
+	struct is_type<char> : public true_type {};
+	template <>
+	struct is_type<wchar_t> : public true_type {};
+	template <>
+	struct is_type<signed char> : public true_type {};
+	template <>
+	struct is_type<short int> : public true_type {};
+	template <>
+	struct is_type<int> : public true_type {};
+	template <>
+	struct is_type<long int> : public true_type {};
+	template <>
+	struct is_type<long long int> : public true_type {};
+	template <>
+	struct is_type<unsigned char> : public true_type {};
+	template <>
+	struct is_type<unsigned short int> : public true_type {};
+	template <>
+	struct is_type<unsigned int> : public true_type {};
+	template <>
+	struct is_type<unsigned long int> : public true_type {};
+	template <>
+	struct is_type<unsigned long long int> : public true_type {};
+
 	template <class T>
-	struct is_integral
+	struct is_integral : public is_type<T>
 	{
 	};
 	///////////////////////////////////////////////////////////

@@ -8,7 +8,7 @@
 namespace ft
 {
 	template <typename T>
-	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
+	class random_access_iterator 
 	{
 		public:
 			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
@@ -494,8 +494,8 @@ namespace ft
 			void assign (size_type n, const value_type& val)///////
 			{
 				for (int i = 0; i < this->m_size; ++i)
-					this->m_alloc.destroy(&this->m_arr[i]);
-				
+					this->m_alloc.destroy(&(this->m_arr[i]));
+				this->m_alloc.deallocate(&(this->m_arr), this->capacity);
 			}
 
 			template <class InputIterator>

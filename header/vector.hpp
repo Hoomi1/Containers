@@ -248,7 +248,6 @@ namespace ft
 					for (int i = 0; i < other.m_size; ++i)
 						this->m_alloc.construct(&this->m_arr[i], other.m_arr[i]);
 					this->m_size = other.m_size;
-					this->m_alloc = other.m_alloc;
 				}
 				return (*this);
 			}

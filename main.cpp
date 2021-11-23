@@ -124,43 +124,18 @@ int main(int argc, char** argv) {
 	i.push_back(-500);
 	i.push_back(1);
 	i.push_back(100);
-	j.push_back(1);
-	j.push_back(2);
-	j.push_back(3);
-	j.push_back(4);
-	j.push_back(5);
-	j = i;
-	//ft::vector<int>::reverse_iterator it_f = i.rend() - 1;
+	// ft::vector<int>::iterator it_b = i.begin();
 	// ft::vector<int>::iterator it_e = i.end();
-	// ft::vector<int> i(it_f, it_e);
-	//i.resize(12, 12);
-	// i.push_back(13);
-	// i.push_back(50);
-	// i.pop_back();
-	std::cout << j.size() << std::endl;
-	std::cout << j.capacity() << std::endl;
-	// try
+
+	// std::cout << j.size() << std::endl;
+	// std::cout << j.capacity() << std::endl;
+	// for (int a = 0; a < j.size(); ++a)
 	// {
-	// 	i.back() -= i.front();
-	// 	std::cout << i.back() << std::endl;
+	// 	std::cout << a << ": "<< j[a] << std::endl;
 	// }
-	// catch(const std::out_of_range& e)
-	// {
-	// 	std::cerr << e.what() << '\n';
-	// }
-	// for (int a = 0; it_f != it_e; ++it_f)
-	// {
-	// 	std::cout << a << ": "<< *it_f << std::endl;
-	// 	++a;
-	// }
-	for (int a = 0; a < j.size(); ++a)
-	{
-		std::cout << a << ": "<< j[a] << std::endl;
-	}
-	// std::cout << i.max_size() << std::endl;
-	// std::cout << i.max_size() << std::endl;
-	// std::cout << i.data() << std::endl;
+
 	std::cout << "_________________________" << std::endl;
+
 	std::vector<int> iv;
 	std::vector<int> jv;
 	iv.push_back(3);
@@ -168,48 +143,14 @@ int main(int argc, char** argv) {
 	iv.push_back(-500);
 	iv.push_back(1);
 	iv.push_back(100);
-	jv.push_back(1);
-	jv.push_back(2);
-	jv.push_back(3);
-	jv.push_back(4);
-	jv.push_back(5);
-	jv = iv;
-	// std::cout << iv.max_size() << std::endl;
-	// std::vector<int>::iterator it = iv.begin();
-	// std::vector<int>::iterator it2 = iv.end();
-	// jv.assign(5, 1);
-	// std::vector<int>::iterator it_ev = iv.end();
-	// for (int a = 0; it_fv != it_ev; ++it_fv)
-	// {
-	// 	std::cout << a << ": "<< *it_fv << std::endl;
-	// 	++a;
-	// }
-	// iv.push_back(2);
-	// iv.push_back(3);
-	// iv.push_back(4);
-	// iv.push_back(5);
-	// iv.push_back(6);	
-	//iv.resize(12, 12);
-	// i.push_back(13);
-	// i.push_back(50);
-	// iv.pop_back();
-	// try
-	// {
-	// 	i.back() -= i.front();
-	// 	std::cout << i.back() << std::endl;
-	// }
-	// catch(const std::out_of_range& e)
-	// {
-	// 	std::cerr << e.what() << '\n';
-	// }
-	
-	
-	std::cout << jv.size() << std::endl;
-	std::cout << jv.capacity() << std::endl;
-	for (int a = 0; a < jv.size(); ++a)
+	std::vector<int>::iterator it = iv.begin() + 2;
+	std::vector<int>::iterator it2 = iv.end();
+	iv.erase(it);
+	std::cout << iv.size() << std::endl;
+	std::cout << iv.capacity() << std::endl;
+	for (int a = 0; a < iv.size(); ++a)
 	{
-		std::cout << a << ": "<< jv[a] << std::endl;
+		std::cout << a << ": "<< iv[a] << std::endl;
 	}
-	// std::cout << iv.max_size() << std::endl;
 	return (0);
 }

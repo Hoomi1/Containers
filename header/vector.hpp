@@ -427,7 +427,18 @@ namespace ft
 			///////////////////////////////////////////////////////////////////
 			iterator insert (iterator position, const value_type& val)////////
 			{
-
+				// if (this->m_size + 1 > this->m_capacity)
+				// 	reserve(this->m_capacity * 2);
+				// pointer p = &(*position);
+				// for (iterator it = ; i < this->m_size + 1; ++i)
+				// {
+				// 	this->m_alloc.destroy((&(*position) + i + 1));
+				// 	this->m_alloc.construct(&(*position) + i + 1, *(&(*position) + i));
+				// }
+				// this->m_alloc.destroy(&(*p));
+				// this->m_alloc.construct(&(*p), val);
+				// this->m_size += 1;
+				// return (iterator(p));
 			}
 
 			void insert (iterator position, size_type n, const value_type& val)///////
@@ -435,29 +446,39 @@ namespace ft
 
 			}
 
-			template <class InputIterator>
-			void insert (iterator position, InputIterator first, InputIterator last)///////
+			template <class InputIterator>///////
+			void insert (iterator position, InputIterator first, InputIterator last,
+						typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
 
 			}
 
-			iterator erase (iterator position)/////
+			iterator erase (iterator position)
 			{
+				pointer p = &(*position);
+				this->m_alloc.destroy(&(*p));
 				for (int i = 0; i < this->m_size; ++i)
-					this->m_alloc.destroy(&this->m_arr[i]);
-				this->m_size--;
-				for (int i = 0; i < this->m_size; ++i)
-					if (this->m_arr[i] != *position)
-						this->m_alloc.construct(&this->m_arr[i], this->m_arr[i]);
+					this->m_alloc.construct(&(*position) + i, *(&(*position) + i + 1));
+				this->m_size -= 1;
+				return(iterator(p));
 			}
 
-			iterator erase (iterator first, iterator last)///////
+			iterator erase (iterator first, iterator last)
 			{
-
+				pointer p = &(*first);
+				int sum = 0;
+				for (iterator it = first; it != last; ++it)
+				{
+					this->m_alloc.destroy(&(*it));
+					sum += 1;
+				}
+				for (int i = 0; i < this->m_size; ++i)
+					this->m_alloc.construct(&(*first) + i, *(&(*last) + i));
+				this->m_size -= sum;
+				return (iterator(p));
 			}
 
 			//insert
-			//erase
 			///////////////////////////////////////////////////////////////////
 			void swap (vector& x)
 			{
@@ -487,6 +508,11 @@ namespace ft
 				for (int i = 0; i < this->m_size; ++i)
 					this->m_alloc.destroy(&this->m_arr[i]);
 				this->m_size = 0;
+			}
+
+			allocator_type get_allocator() const
+			{
+				return (this->m_alloc);
 			}
 	};
 

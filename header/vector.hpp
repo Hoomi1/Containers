@@ -137,6 +137,10 @@ namespace ft
 				return (*(this->m_arr + pos));
 			}
 			
+			operator ft::random_access_iterator<const value_type>() const
+			{
+				return (ft::random_access_iterator<const value_type>(this->m_Ptr));
+			}
 	};
 
 	template <typename T>
@@ -427,23 +431,80 @@ namespace ft
 			///////////////////////////////////////////////////////////////////
 			iterator insert (iterator position, const value_type& val)////////
 			{
-				// if (this->m_size + 1 > this->m_capacity)
-				// 	reserve(this->m_capacity * 2);
-				// pointer p = &(*position);
-				// for (iterator it = ; i < this->m_size + 1; ++i)
-				// {
-				// 	this->m_alloc.destroy((&(*position) + i + 1));
-				// 	this->m_alloc.construct(&(*position) + i + 1, *(&(*position) + i));
-				// }
-				// this->m_alloc.destroy(&(*p));
-				// this->m_alloc.construct(&(*p), val);
-				// this->m_size += 1;
-				// return (iterator(p));
+				pointer p = &(*position);
+				if (this->m_size + 1 > this->m_capacity)
+				{
+					this->m_capacity *= 2;
+					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
+					int i = 0;
+					for (iterator it = begin(); it != position; ++it, ++i)
+						this->m_alloc.construct(new_arr + i, *it);
+					this->m_alloc.construct(new_arr + i, val);
+					i += 1;
+					for (iterator it = position; it != end(); ++it, ++i)
+						this->m_alloc.construct(new_arr + i, *it);
+					this->m_size += 1;
+					for (int i = 0; i < this->m_size; ++i)
+						this->m_alloc.destroy(&this->m_arr[i]);
+					if (this->m_arr)
+					this->m_alloc.deallocate(this->m_arr, this->m_capacity);
+					this->m_arr = new_arr;
+				}
+				else
+				{
+					iterator it = end();
+					for (; it != position; --it)
+					{
+						this->m_alloc.destroy(&(*it) + 1);
+						this->m_alloc.construct((&(*it) + 1), *it);
+					}
+					this->m_alloc.destroy(&(*it) + 1);
+					this->m_alloc.construct((&(*it) + 1), *it);
+					this->m_alloc.destroy(&(*position));
+					this->m_alloc.construct(&(*position), val);
+					this->m_size += 1;
+				}
+				return (iterator(p));
 			}
 
 			void insert (iterator position, size_type n, const value_type& val)///////
 			{
-
+				pointer p = &(*position);
+				if (this->m_size + n > this->m_capacity)
+				{
+					this->m_capacity *= 2;
+					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
+					int i = 0;
+					for (iterator it = begin(); it != position; ++it, ++i)
+						this->m_alloc.construct(new_arr + i, *it);
+					for (int j = 0; j < n; ++j, ++i)
+						this->m_alloc.construct(new_arr + i, val);
+					for (iterator it = position; it != end(); ++it, ++i)
+						this->m_alloc.construct(new_arr + i, *it);
+					this->m_size += n;
+					for (int i = 0; i < this->m_size; ++i)
+						this->m_alloc.destroy(&this->m_arr[i]);
+					if (this->m_arr)
+					this->m_alloc.deallocate(this->m_arr, this->m_capacity);
+					this->m_arr = new_arr;
+				}
+				else
+				{
+					iterator it = end();
+					for (; it != position; --it)
+					{
+						this->m_alloc.destroy(&(*it) + n);
+						this->m_alloc.construct((&(*it) + n), *it);
+					}
+					this->m_alloc.destroy(&(*it) + n);
+					this->m_alloc.construct((&(*it) + n), *it);
+					for (int j = 0; j != n; ++j, ++it)
+					{
+						this->m_alloc.destroy(&(*it));
+						this->m_alloc.construct(&(*it), val);
+					}
+					this->m_size += n;
+				}
 			}
 
 			template <class InputIterator>///////

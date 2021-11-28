@@ -118,17 +118,17 @@ int main(int argc, char** argv) {
 	// std::cout << std::endl;
 
 	ft::vector<int> i;
-	i.reserve(16);
 	//ft::vector<int> j;
+	i.reserve(16);
 	i.push_back(3);
 	i.push_back(2);
 	i.push_back(-500);
 	i.push_back(1);
 	i.push_back(100);
-	ft::vector<int>::iterator it_b = i.begin() + 0;
-	//ft::vector<int>::iterator it_e = i.end() - 3;
+	ft::vector<int>::iterator it_b = i.begin() + 5;
+	ft::vector<int>::iterator it_e = i.end();// problema sprosit u Stasa!!!! where do i.end() - 0
 	//std::cout << *it_e << std::endl;
-	i.insert(it_b, 1);
+	i.insert(it_e, 5, 5);
 	std::cout << i.size() << std::endl;
 	std::cout << i.capacity() << std::endl;
 	for (int a = 0; a < i.size(); ++a)
@@ -138,22 +138,23 @@ int main(int argc, char** argv) {
 
 	std::cout << "_________________________" << std::endl;
 
-	// std::vector<int> iv;
-	// //std::vector<int> jv;
-	// iv.push_back(3);
-	// iv.push_back(2);
-	// iv.push_back(-500);
-	// iv.push_back(1);
-	// iv.push_back(100);
-	// std::vector<int>::iterator it = iv.begin() + 0;
-	// std::vector<int>::iterator it2 = iv.end() - 3;
-	// //std::cout << *it2 << std::endl;
-	// iv.insert(it, 1);
-	// std::cout << iv.size() << std::endl;
-	// std::cout << iv.capacity() << std::endl;
-	// for (int a = 0; a < iv.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< iv[a] << std::endl;
-	// }
+	std::vector<int> iv;
+	//std::vector<int> jv;
+	iv.reserve(16);
+	iv.push_back(3);
+	iv.push_back(2);
+	iv.push_back(-500);
+	iv.push_back(1);
+	iv.push_back(100);
+	std::vector<int>::iterator it = iv.begin() + 5;
+	std::vector<int>::iterator it2 = iv.end() - 0;
+	//std::cout << *it2 << std::endl;
+	iv.insert(it2, 5, 5);
+	std::cout << iv.size() << std::endl;
+	std::cout << iv.capacity() << std::endl;
+	for (int a = 0; a < iv.size(); ++a)
+	{
+		std::cout << a << ": "<< iv[a] << std::endl;
+	}
 	return (0);
 }

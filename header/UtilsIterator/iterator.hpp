@@ -76,7 +76,7 @@ namespace ft
 		explicit reverse_iterator(iterator_type x) : itr(x) {}
 
 		template <class Iterator>
-		reverse_iterator(const reverse_iterator<Iterator> &other) : itr(other.itr) {}
+		reverse_iterator(const reverse_iterator<Iterator> &other) : itr(other.base()) {}
 
 		template <class iterator>
 		reverse_iterator &operator=(const reverse_iterator<iterator> &other)

@@ -36,6 +36,11 @@ namespace ft
 
 			random_access_iterator(pointer ptr) : m_Ptr(ptr){}
 
+			random_access_iterator base() const
+			{
+				return (this->m_Ptr);
+			}
+
 			bool operator==(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr == other.m_Ptr);
@@ -100,6 +105,7 @@ namespace ft
 			{
 				return (this->m_Ptr - it.m_Ptr);
 			}
+
 			bool operator>(const random_access_iterator &other) const
 			{
 				return (this->m_Ptr > other.m_Ptr);
@@ -134,12 +140,17 @@ namespace ft
 
 			reference operator [](difference_type pos) const
 			{
-				return (*(this->m_arr + pos));
+				return (*(this->m_Ptr + pos));
 			}
 			
-			operator ft::random_access_iterator<const value_type>() const
+			// operator ft::random_access_iterator<const value_type >() const
+			// {
+			// 	return (ft::random_access_iterator<const value_type>(this->m_Ptr));
+			// }
+
+			operator random_access_iterator<const T>() const
 			{
-				return (ft::random_access_iterator<const value_type>(this->m_Ptr));
+				return (random_access_iterator<const T>(this->m_Ptr));
 			}
 	};
 
@@ -151,6 +162,114 @@ namespace ft
 		temp += _num;
 		return (temp);
 	}
+
+	template <typename T>
+	ft::random_access_iterator<T> operator-(typename ft::random_access_iterator<T>::difference_type _num,
+											ft::random_access_iterator<T> it)
+	{
+		const ft::random_access_iterator<T> temp(it);
+		temp -= _num;
+		return (temp);
+	}
+
+	template <typename T>
+	typename ft::random_access_iterator<T>::difference_type operator-(const ft::random_access_iterator<T> lhs,
+																	const ft::random_access_iterator<T> rhs)
+	{
+		return (lhs.base() - rhs.base());
+	}
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator-(const ft::random_access_iterator<T_L> lhs,
+	// 																const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() - rhs.base());
+	// }
+
+	// template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator==(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (lhs.base() == rhs.base());
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator==(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() == rhs.base());
+	// }
+
+	// template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator!=(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (ft::random_access_iterator<T>::difference_type(lhs.base() != rhs.base()));
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator!=(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() != rhs.base());
+	// }
+
+	// template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator<(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (lhs.base() < rhs.base());
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator<(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() < rhs.base());
+	// }
+
+	// template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator>(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (lhs.base() > rhs.base());
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator>(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() > rhs.base());
+	// }
+
+	// template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator<=(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (lhs.base() <= rhs.base());
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator<=(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() <= rhs.base());
+	// }
+
+	// 	template <typename T>
+	// typename ft::random_access_iterator<T>::difference_type operator>=(const ft::random_access_iterator<T> lhs,
+	// 																const ft::random_access_iterator<T> rhs)
+	// {
+	// 	return (lhs.base() >= rhs.base());
+	// }
+
+	// template<typename T_L, typename T_R>
+	// typename ft::random_access_iterator<T_L>::difference_type operator>=(const ft::random_access_iterator<T_L> lhs,
+	// 																	const ft::random_access_iterator<T_R> rhs)
+	// {
+	// 	return (lhs.base() >= rhs.base());
+	// }
+
 
 	template < class T, class Alloc = std::allocator<T> >
 	class vector
@@ -194,7 +313,7 @@ namespace ft
 				m_arr = m_alloc.allocate(n);
 				if (n > this->m_capacity)
 					reserve(n);
-				for (int i = this->m_size; i < n; ++i)
+				for (size_type i = this->m_size; i < n; ++i)
 					this->m_arr[i] = value_type(val);
 				this->m_size = n;
 			}
@@ -221,7 +340,7 @@ namespace ft
 			m_capacity(other.m_capacity)
 			{
 				this->m_arr = (this->m_alloc.allocate(this->m_capacity));
-				for (int i = 0; i < other.m_size; ++i)
+				for (size_type i = 0; i < other.m_size; ++i)
 					this->m_alloc.construct(&this->m_arr[i], other.m_arr[i]);
 			}
 		/////
@@ -236,7 +355,7 @@ namespace ft
 			{
 				if (*this != other)
 				{
-					for (int i = 0; i < this->m_size; ++i)
+					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (other.m_capacity > this->m_capacity)
 					{
@@ -244,7 +363,7 @@ namespace ft
 						this->m_capacity = other.m_size;
 						this->m_arr = this->m_alloc.allocate(this->m_capacity);
 					}
-					for (int i = 0; i < other.m_size; ++i)
+					for (size_type i = 0; i < other.m_size; ++i)
 						this->m_alloc.construct(&this->m_arr[i], other.m_arr[i]);
 					this->m_size = other.m_size;
 				}
@@ -303,12 +422,29 @@ namespace ft
 
 			void resize(size_type n, const value_type &value = value_type())
 			{
+				// if (this->m_size < n)
+				// pointer new_arr;
+				// if (n > this->m_capacity)
+				// 	reserve(n);
+				// for (size_type i = this->m_size; i < n; ++i)
+				// {
+				// 	this->m_arr[i] = value_type(value);
+				// }
+				// this->m_size = n;
+				if (this->m_size > n)
+				{
+					for (size_type i = 0; i < this->m_size; ++i)
+						this->m_alloc.destroy(&this->m_arr[i]);
+					this->m_size = n;
+					for (size_type i = 0; i < this->m_size; ++i)
+					{
+						this->m_alloc.construct(&m_arr[i], m_arr[i]);
+					}
+				}
 				if (n > this->m_capacity)
 					reserve(n);
-				for (int i = this->m_size; i < n; ++i)
-				{
-					this->m_arr[i] = value_type(value);
-				}
+				for (size_type i = this->m_size; i < n; ++i)
+					this->m_alloc.construct(&m_arr[i], value);
 				this->m_size = n;
 			}
 
@@ -331,10 +467,10 @@ namespace ft
 				if (new_cap > max_size())
 					throw std::length_error("vector");
 				pointer new_arr = this->m_alloc.allocate(new_cap);
-				for (int i = 0; i < this->m_size;++i)
+				for (size_type i = 0; i < this->m_size;++i)
 					this->m_alloc.construct(&new_arr[i], this->m_arr[i]);
 				this->m_capacity = new_cap;
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.destroy(&this->m_arr[i]);
 				this->m_arr = new_arr;
 			}
@@ -380,7 +516,7 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)
 			{
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 				if (n > this->m_capacity)
 				{
@@ -388,7 +524,7 @@ namespace ft
 					this->m_capacity = n;
 					this->m_arr = this->m_alloc.allocate(n);
 				}
-				for (int i = 0; i < n; ++i)
+				for (size_type i = 0; i < n; ++i)
 					this->m_alloc.construct(&this->m_arr[i], val);
 				this->m_size = n;
 			}
@@ -398,12 +534,12 @@ namespace ft
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)////
 			{
 				size_type new_size = 0;
-
-				reserve(last - first);
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.destroy(&this->m_arr[i]);
 				for (InputIterator it = first; it != last; ++it)
-					new_size++;
+					new_size += 1;
+				if (new_size > max_size())
+					reserve(new_size);
 				if (this->m_capacity < new_size)
 				{
 					this->m_alloc.deallocate(this->m_arr, this->m_capacity);
@@ -443,7 +579,7 @@ namespace ft
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					this->m_size += 1;
-					for (int i = 0; i < this->m_size; ++i)
+					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 					this->m_alloc.deallocate(this->m_arr, this->m_capacity);
@@ -468,7 +604,6 @@ namespace ft
 
 			void insert (iterator position, size_type n, const value_type& val)///////
 			{
-				pointer p = &(*position);
 				if (this->m_size + n > this->m_capacity)
 				{
 					this->m_capacity *= 2;
@@ -476,12 +611,12 @@ namespace ft
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-					for (int j = 0; j < n; ++j, ++i)
+					for (size_type j = 0; j < n; ++j, ++i)
 						this->m_alloc.construct(new_arr + i, val);
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					this->m_size += n;
-					for (int i = 0; i < this->m_size; ++i)
+					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 						this->m_alloc.deallocate(this->m_arr, this->m_capacity);
@@ -497,7 +632,7 @@ namespace ft
 					}
 					this->m_alloc.destroy(&(*it) + n);
 					this->m_alloc.construct((&(*it) + n), *it);
-					for (int j = 0; j != n; ++j, ++it)
+					for (size_type j = 0; j != n; ++j, ++it)
 					{
 						this->m_alloc.destroy(&(*it));
 						this->m_alloc.construct(&(*it), val);
@@ -510,7 +645,6 @@ namespace ft
 			void insert (iterator position, InputIterator first, InputIterator last,
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
-				pointer p = &(*position);
 				size_type n = 0;
 				for (InputIterator it = first; it != last; ++it)
 					n++;
@@ -522,12 +656,12 @@ namespace ft
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					InputIterator jt = first;
-					for (int j = 0; j < n; ++j, ++i, ++jt)
+					for (size_type j = 0; j < n; ++j, ++i, ++jt)
 						this->m_alloc.construct(new_arr + i, *jt);
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					this->m_size += n;
-					for (int i = 0; i < this->m_size; ++i)
+					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 						this->m_alloc.deallocate(this->m_arr, this->m_capacity);
@@ -544,7 +678,7 @@ namespace ft
 					this->m_alloc.destroy(&(*it) + n);
 					this->m_alloc.construct((&(*it) + n), *it);
 					InputIterator jt = first;
-					for (int j = 0; j != n; ++j, ++it, ++jt)
+					for (size_type j = 0; j != n; ++j, ++it, ++jt)
 					{
 						this->m_alloc.destroy(&(*it));
 						this->m_alloc.construct(&(*it), *jt);
@@ -557,7 +691,7 @@ namespace ft
 			{
 				pointer p = &(*position);
 				this->m_alloc.destroy(&(*p));
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.construct(&(*position) + i, *(&(*position) + i + 1));
 				this->m_size -= 1;
 				return(iterator(p));
@@ -572,7 +706,7 @@ namespace ft
 					this->m_alloc.destroy(&(*it));
 					sum += 1;
 				}
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.construct(&(*first) + i, *(&(*last) + i));
 				this->m_size -= sum;
 				return (iterator(p));
@@ -605,7 +739,7 @@ namespace ft
 
 			void clear()
 			{
-				for (int i = 0; i < this->m_size; ++i)
+				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.destroy(&this->m_arr[i]);
 				this->m_size = 0;
 			}

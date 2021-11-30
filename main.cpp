@@ -49,7 +49,7 @@
 
 
 
-int main(int argc, char** argv) {
+/*int main(int argc, char** argv) {
 	// if (argc != 2)
 	// {
 	// 	std::cerr << "Usage: ./test seed" << std::endl;
@@ -118,8 +118,7 @@ int main(int argc, char** argv) {
 	// }
 	// std::cout << std::endl;
 
-	ft::stack<int> s;
-	// ft::vector<int> i(5, 100);
+	ft::vector<int> i(10);
 	// ft::vector<int> j;
 	// i.reserve(16);
 	// i.push_back(3);
@@ -127,21 +126,21 @@ int main(int argc, char** argv) {
 	// i.push_back(-500);
 	// i.push_back(1);
 	// i.push_back(100);
-	// ft::vector<int>::iterator it_b = i.begin();
-	// ft::vector<int>::iterator it_b2 = i.end();
-	// //ft::vector<int>::iterator it_e = i.end();// problema sprosit u Stasa!!!! where do i.end() - 0
+	ft::vector<int>::iterator it_b = i.begin();
+	ft::vector<int>::iterator it_b2 = i.end();
+	// //ft::vector<int>::iterator it_e = i.end() - 0;// problema sprosit u Stasa!!!! where do i.end() - 0
 	// //std::cout << *it_e << std::endl;
-	// i.insert(it_b, it_b, it_b2);
-	// std::cout << i.size() << std::endl;
-	// std::cout << i.capacity() << std::endl;
-	// for (int a = 0; a < i.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< i[a] << std::endl;
-	// }
+	i.resize(4);
+	std::cout << i.size() << std::endl;
+	std::cout << i.capacity() << std::endl;
+	for (int a = 0; a < i.size(); ++a)
+	{
+		std::cout << a << ": "<< i[a] << std::endl;
+	}
 
 	std::cout << "_________________________" << std::endl;
 
-	// std::vector<int> iv(5, 100);
+	std::vector<int> iv(10);
 	// std::vector<int> jv;
 	// iv.reserve(16);
 	// iv.push_back(3);
@@ -149,15 +148,17 @@ int main(int argc, char** argv) {
 	// iv.push_back(-500);
 	// iv.push_back(1);
 	// iv.push_back(100);
-	// std::vector<int>::iterator it = iv.begin();
-	// std::vector<int>::iterator it2 = iv.end();
+	std::vector<int>::iterator it = iv.begin();
+	std::vector<int>::iterator it2 = iv.end();
 	// //std::cout << *it2 << std::endl;
-	// iv.insert(it, it, it2);
-	// std::cout << iv.size() << std::endl;
-	// std::cout << iv.capacity() << std::endl;
-	// for (int a = 0; a < iv.size(); ++a)
-	// {
-	// 	std::cout << a << ": "<< iv[a] << std::endl;
-	// }
+	iv.resize(4);
+	std::cout << iv.size() << std::endl;
+	std::cout << iv.capacity() << std::endl;
+	for (int a = 0; a < iv.size(); ++a)
+	{
+		std::cout << a << ": "<< iv[a] << std::endl;
+	}
 	return (0);
-}
+}*/
+
+//#include "header/containers_test/srcs/vector/common.hpp"

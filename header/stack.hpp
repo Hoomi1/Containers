@@ -56,7 +56,7 @@ namespace ft
 
 			void push (const value_type& val)
 			{
-				return (this->container.push_back());
+				return (this->container.push_back(val));
 			}
 
 			void pop()
@@ -64,7 +64,23 @@ namespace ft
 				return (this->container.pop_back());
 			}
 
+			template <class U1, class U2>
+			friend bool operator== (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
 
+			template <class U1, class U2>
+			friend bool operator!= (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
+
+			template <class U1, class U2>
+			friend bool operator< (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
+
+			template <class U1, class U2>
+			friend bool operator<= (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
+
+			template <class U1, class U2>
+			friend bool operator> (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
+
+			template <class U1, class U2>
+			friend bool operator>= (const stack<U1,U2>& lhs, const stack<U1,U2>& rhs);
 	};
 
 	template <class T, class Container>
@@ -80,7 +96,7 @@ namespace ft
 	}
 
 	template <class T, class Container>
-	bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
 		return (lhs.container < rhs.container);
 	}
@@ -92,7 +108,7 @@ namespace ft
 	}
 
 	template <class T, class Container>
-	bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+	bool operator> (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
 		return (lhs.container > rhs.container);
 	}

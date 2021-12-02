@@ -8,6 +8,7 @@
 	#include <stack>
 	#include <vector>
 	#include <iterator>
+	#include <list>
 	//namespace ft = std;
 // #else
 // 	#include <map.hpp>
@@ -163,37 +164,65 @@
 
 #include "header/containers_test/srcs/vector/common.hpp"
 
+// #define TESTED_TYPE int
+
+// int		main(void)
+// {
+// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(10);
+// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2;
+
+// 	for (unsigned long int i = 0; i < vct.size(); ++i)
+// 		vct[i] = (vct.size() - i) * 3;
+// 	printSize(vct);
+
+// 	vct2.insert(vct2.end(), 42);
+// 	vct2.insert(vct2.begin(), 2, 21);
+// 	std::cout << vct2.size() << "\n";
+// 	std::cout << vct2.capacity() << "\n";
+// 	printSize(vct2);
+
+// 	vct2.insert(vct2.end() - 2, 42);
+// 	printSize(vct2);
+
+// 	vct2.insert(vct2.end(), 2, 84);
+// 	printSize(vct2);
+
+// 	vct2.resize(4);
+// 	printSize(vct2);
+
+// 	vct2.insert(vct2.begin() + 2, vct.begin(), vct.end());
+// 	vct.clear();
+// 	printSize(vct2);
+
+// 	printSize(vct);
+// 	return (0);
+// }
 
 #define TESTED_TYPE int
 
 int		main(void)
 {
-	const int size = 5;
-	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(size);
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator it = vct.rbegin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator ite = vct.rbegin();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(5);
+	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2;
+	const int cut = 3;
 
-	for (int i = 0; i < size; ++i)
-		it[i] = (size - i) * 5;
+	for (unsigned long int i = 0; i < vct.size(); ++i)
+		vct[i] = (vct.size() - i) * 7;
+	printSize(vct);
 
-	it = it + 5;
-	it = 1 + it;
-	it = it - 4;
-	std::cout << *(it += 2) << std::endl;
-	std::cout << *(it -= 1) << std::endl;
+	vct2.insert(vct2.begin(), vct.begin(), vct.begin() + cut);
+	printSize(vct2);
+	vct2.insert(vct2.begin(), vct.begin() + cut, vct.end());
+	printSize(vct2);
+	vct2.insert(vct2.end(), vct.begin(), vct.begin() + cut);
+	printSize(vct2);
 
-	*(it -= 2) = 42;
-	*(it += 2) = 21;
-	
-	std::cout << "it1: " << *it << std::endl;
-	std::cout << "const_ite +=/-=: " << *(ite += 2) << " | " << *(ite -= 2) << std::endl;
+	std::cout << "insert return:" << std::endl;
 
-	std::cout << "(it == const_it): " << (ite == it) << std::endl;
-	std::cout << "ite: " << *ite << std::endl;
-	std::cout << "it2: " << *it << std::endl;
-	std::cout << "(const_ite - it): " << (ite - it) << std::endl;
-	std::cout << "(ite + 3 == it): " << (ite + 3 == it) << std::endl;
+	std::cout << *vct2.insert(vct2.end(), 42) << std::endl;
+	std::cout << *vct2.insert(vct2.begin() + 5, 84) << std::endl;
+	std::cout << "----------------------------------------" << std::endl;
 
-	printSize(vct, true);
+	printSize(vct2);
 	return (0);
 }

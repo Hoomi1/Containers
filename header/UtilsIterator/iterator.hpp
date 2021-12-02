@@ -130,7 +130,7 @@ namespace ft
 		reverse_iterator operator--(int)
 		{
 			iterator_type tmp = base();
-			--this->itr;
+			++this->itr;
 			return (reverse_iterator(tmp));
 		}
 
@@ -182,28 +182,28 @@ namespace ft
 	bool operator<(const reverse_iterator<Iterator1> &lhs,
 				const reverse_iterator<Iterator2> &rhs)
 	{
-		return (lhs.base() < rhs.base());
+		return (!(lhs.base() < rhs.base()));
 	}
 
 	template <class Iterator1, class Iterator2>
 	bool operator<=(const reverse_iterator<Iterator1> &lhs,
 					const reverse_iterator<Iterator2> &rhs)
 	{
-		return (lhs.base() <= rhs.base());
+		return (!(lhs.base() <= rhs.base()));
 	}
 
 	template <class Iterator1, class Iterator2>
 	bool operator>(const reverse_iterator<Iterator1> &lhs,
 				const reverse_iterator<Iterator2> &rhs)
 	{
-		return (lhs.base() > rhs.base());
+		return (!(lhs.base() > rhs.base()));
 	}
 
 	template <class Iterator1, class Iterator2>
 	bool operator>=(const reverse_iterator<Iterator1> &lhs,
 					const reverse_iterator<Iterator2> &rhs)
 	{
-		return (lhs.base() >= rhs.base());
+		return (!(lhs.base() >= rhs.base()));
 	}
 
 	template <class Iterator>

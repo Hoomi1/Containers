@@ -338,7 +338,7 @@ namespace ft
 			explicit vector(const allocator_type& alloc = allocator_type()) :
 			m_alloc(alloc),
 			m_size(0),
-			m_capacity(1)
+			m_capacity(0)
 			{
 				this->m_arr = this->m_alloc.allocate(0);
 			}
@@ -347,7 +347,7 @@ namespace ft
 				const allocator_type& alloc = allocator_type()) :
 				m_alloc(alloc),
 				m_size(0),
-				m_capacity(1)
+				m_capacity(0)
 			{
 				m_arr = m_alloc.allocate(n);
 				if (n > this->m_capacity)
@@ -422,12 +422,12 @@ namespace ft
 
 			iterator end()
 			{
-				return (iterator(&(this->m_arr[this->m_size])));
+				return (iterator(&(*(this->m_arr + this->m_size))));
 			}
 
 			const_iterator end() const
 			{
-				return (const_iterator(&(this->m_arr[this->m_size])));
+				return (const_iterator(&(*(this->m_arr + this->m_size))));
 			}
 
 			reverse_iterator rbegin()
@@ -595,9 +595,8 @@ namespace ft
 			void push_back(const_reference value)
 			{
 				if (this->m_size >= this->m_capacity)
-					reserve(this->m_capacity * 2);
+					reserve(this->m_capacity * 2 + (this->m_capacity == 0));
 				this->m_alloc.construct(&this->m_arr[m_size], value);
-				//this->m_arr[m_size] = value_type(value);
 				++m_size;
 			}
 
@@ -608,9 +607,13 @@ namespace ft
 			///////////////////////////////////////////////////////////////////
 			iterator insert (iterator position, const value_type& val)////////
 			{
-				if (this->m_size + 1 > this->m_capacity)
+				size_type n = position - this->begin();
+				if (this->m_size + 1 >= this->m_capacity)
 				{
-					this->m_capacity *= 2;
+					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
+					this->m_size += 1;
+					if (this->m_capacity < m_size)
+						this->m_capacity = m_size;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
@@ -619,7 +622,6 @@ namespace ft
 					i += 1;
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += 1;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
@@ -640,14 +642,17 @@ namespace ft
 					this->m_alloc.construct(&(*position), val);
 					this->m_size += 1;
 				}
-				return (iterator(this->begin() + 0));
+				return (iterator(this->begin() + n));
 			}
 
 			void insert (iterator position, size_type n, const value_type& val)///////
 			{
-				if (this->m_size + n > this->m_capacity)
+				if (this->m_size + n >= this->m_capacity)
 				{
-					this->m_capacity *= 2;
+					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
+					this->m_size += n;
+					if (this->m_capacity < this->m_size)
+						this->m_capacity = this->m_size;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
@@ -656,7 +661,6 @@ namespace ft
 						this->m_alloc.construct(new_arr + i, val);
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += n;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
@@ -686,22 +690,27 @@ namespace ft
 			void insert (iterator position, InputIterator first, InputIterator last,
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
+				//pointer p = &(*position);
 				size_type n = 0;
 				for (InputIterator it = first; it != last; ++it)
 					n++;
-				if (this->m_size + n > this->m_capacity)
+				if (this->m_size + n >= this->m_capacity)
 				{
-					this->m_capacity *= 2;
+					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
+					this->m_size += n;
+					if (this->m_capacity < this->m_size)
+						this->m_capacity = m_size;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
+
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					InputIterator jt = first;
 					for (size_type j = 0; j < n; ++j, ++i, ++jt)
 						this->m_alloc.construct(new_arr + i, *jt);
-					for (iterator it = position; it != end(); ++it, ++i)
+					for (iterator it = position; it != this->end(); ++it, ++i) /// vot tut position + n
 						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += n;
+
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)

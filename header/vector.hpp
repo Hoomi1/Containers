@@ -422,12 +422,12 @@ namespace ft
 
 			iterator end()
 			{
-				return (iterator(&(*(this->m_arr + this->m_size))));
+				return (iterator(m_arr + m_size));
 			}
 
 			const_iterator end() const
 			{
-				return (const_iterator(&(*(this->m_arr + this->m_size))));
+				return (const_iterator(this->m_arr + this->m_size));
 			}
 
 			reverse_iterator rbegin()
@@ -620,7 +620,7 @@ namespace ft
 						this->m_alloc.construct(new_arr + i, *it);
 					this->m_alloc.construct(new_arr + i, val);
 					i += 1;
-					for (iterator it = position; it != end(); ++it, ++i)
+					for (iterator it = position; it != end() - 1; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
@@ -659,7 +659,7 @@ namespace ft
 						this->m_alloc.construct(new_arr + i, *it);
 					for (size_type j = 0; j < n; ++j, ++i)
 						this->m_alloc.construct(new_arr + i, val);
-					for (iterator it = position; it != end(); ++it, ++i)
+					for (iterator it = position; it != end() - n; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
@@ -702,15 +702,13 @@ namespace ft
 						this->m_capacity = m_size;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
-
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					InputIterator jt = first;
 					for (size_type j = 0; j < n; ++j, ++i, ++jt)
 						this->m_alloc.construct(new_arr + i, *jt);
-					for (iterator it = position; it != this->end(); ++it, ++i) /// vot tut position + n
+					for (iterator it = position; it != end() - n; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)

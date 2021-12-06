@@ -9,6 +9,10 @@ namespace ft
 	{
 	};
 
+	struct bidirectional_iterator_tag
+	{
+	};
+
 	template <class Category, class T, class Distance = std::ptrdiff_t,
 			class Pointer = T *, class Reference = T &>
 	struct iterator
@@ -265,10 +269,10 @@ namespace ft
 	public:
 		pair() : first(), second() {}
 
-		pair(const T1 &x, const T2 &y) : first(x), second(y) {}
+		pair(const first_type &a, const second_type &b) : first(a), second(b) {}
 
 		template <class U1, class U2>
-		pair(const pair<U1, U2> &p) : first(p.first), second(p.second) {}
+		pair(const pair<U1, U2> &pr) : first(pr.first), second(pr.second) {}
 
 		~pair() {}
 
@@ -282,16 +286,16 @@ namespace ft
 			return (*this);
 		}
 
-		template <class U1, class U2>
-		pair &operator=(const pair<U1, U2> &other)
-		{
-			if (this != &other)
-			{
-				this->first = other.first;
-				this->second = other.second;
-			}
-			return (*this);
-		}
+		// template <class U1, class U2>
+		// pair &operator=(const pair<U1, U2> &other)
+		// {
+		// 	if (this != &other)
+		// 	{
+		// 		this->first = other.first;
+		// 		this->second = other.second;
+		// 	}
+		// 	return (*this);
+		// }
 	};
 
 	template <class T1, class T2>

@@ -34,24 +34,19 @@ namespace ft
 		/////
 			explicit vector(const allocator_type& alloc = allocator_type()) :
 			m_alloc(alloc),
+			m_arr(NULL),
 			m_size(0),
-			m_capacity(0)
-			{
-				this->m_arr = this->m_alloc.allocate(0);
-			}
+			m_capacity(0) {}
 		/////
 			explicit vector(size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type()) :
 				m_alloc(alloc),
-				m_size(0),
-				m_capacity(0)
+				m_size(n),
+				m_capacity(n)
 			{
 				m_arr = m_alloc.allocate(n);
-				if (n > this->m_capacity)
-					reserve(n);
-				for (size_type i = this->m_size; i < n; ++i)
+				for (size_type i = 0; i < n; ++i)
 					this->m_alloc.construct(&this->m_arr[i], val);
-				this->m_size = n;
 			}
 		/////
 			template <class InputIterator>
@@ -72,12 +67,14 @@ namespace ft
 		/////
 			vector(const vector &other) :
 			m_alloc(other.m_alloc),
-			m_size(other.m_size),
-			m_capacity(other.m_capacity)
+			m_size(0),
+			m_capacity(0)
 			{
-				this->m_arr = (this->m_alloc.allocate(this->m_capacity));
+				this->m_arr = this->m_alloc.allocate(other.m_capacity);
 				for (size_type i = 0; i < other.m_size; ++i)
 					this->m_alloc.construct(&this->m_arr[i], other.m_arr[i]);
+				this->m_capacity = other.m_capacity;
+				this->m_size = other.m_size;
 			}
 		/////
 			~vector()
@@ -96,7 +93,7 @@ namespace ft
 					if (other.m_capacity > this->m_capacity)
 					{
 						this->m_alloc.deallocate(this->m_arr, this->m_capacity);
-						this->m_capacity = other.m_size;
+						this->m_capacity = other.m_capacity;
 						this->m_arr = this->m_alloc.allocate(this->m_capacity);
 					}
 					for (size_type i = 0; i < other.m_size; ++i)
@@ -199,6 +196,7 @@ namespace ft
 				this->m_capacity = new_cap;
 				for (size_type i = 0; i < this->m_size; ++i)
 					this->m_alloc.destroy(&this->m_arr[i]);
+				this->m_alloc.deallocate(this->m_arr,this->m_capacity);
 				this->m_arr = new_arr;
 			}
 
@@ -298,17 +296,17 @@ namespace ft
 				if (this->m_size + 1 >= this->m_capacity)
 				{
 					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
-					this->m_size += 1;
-					if (this->m_capacity < m_size)
-						this->m_capacity = m_size;
+					if (this->m_capacity < m_size + 1)
+						this->m_capacity = m_size + 1;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					this->m_alloc.construct(new_arr + i, val);
 					i += 1;
-					for (iterator it = position; it != end() - 1; ++it, ++i)
+					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
+					this->m_size += 1;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
@@ -337,17 +335,17 @@ namespace ft
 				if (this->m_size + n >= this->m_capacity)
 				{
 					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
-					this->m_size += n;
-					if (this->m_capacity < this->m_size)
-						this->m_capacity = this->m_size;
+					if (this->m_capacity < this->m_size + n)
+						this->m_capacity = this->m_size + n;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
 					for (size_type j = 0; j < n; ++j, ++i)
 						this->m_alloc.construct(new_arr + i, val);
-					for (iterator it = position; it != end() - n; ++it, ++i)
+					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
+					this->m_size += n;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
@@ -383,9 +381,8 @@ namespace ft
 				if (this->m_size + n >= this->m_capacity)
 				{
 					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
-					this->m_size += n;
-					if (this->m_capacity < this->m_size)
-						this->m_capacity = m_size;
+					if (this->m_capacity < this->m_size + n)
+						this->m_capacity = this->m_size + n;
 					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
 					int i = 0;
 					for (iterator it = begin(); it != position; ++it, ++i)
@@ -393,8 +390,9 @@ namespace ft
 					InputIterator jt = first;
 					for (size_type j = 0; j < n; ++j, ++i, ++jt)
 						this->m_alloc.construct(new_arr + i, *jt);
-					for (iterator it = position; it != end() - n; ++it, ++i)
+					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
+					this->m_size += n;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
@@ -438,11 +436,14 @@ namespace ft
 				for (iterator it = first; it != last; ++it)
 				{
 					this->m_alloc.destroy(&(*it));
-					sum += 1;
+					sum++;
 				}
-				for (size_type i = 0; i < this->m_size; ++i)
-					this->m_alloc.construct(&(*first) + i, *(&(*last) + i));
 				this->m_size -= sum;
+				for (size_type i = 0; i < this->m_size; ++i)
+				{
+					this->m_alloc.construct(&(*first) + i, *(&(*last) + i));
+					//this->m_alloc.destroy(&(*last) + i + 1);
+				}
 				return (iterator(p));
 			}
 
@@ -479,6 +480,16 @@ namespace ft
 			allocator_type get_allocator() const
 			{
 				return (this->m_alloc);
+			}
+
+			value_type* data()
+			{
+				return (this->m_arr);
+			}
+
+			const value_type* data() const
+			{
+				return (this->m_arr);
 			}
 	};
 

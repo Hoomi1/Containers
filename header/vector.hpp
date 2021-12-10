@@ -11,18 +11,18 @@ namespace ft
 	class vector
 	{
 		public:
-			typedef T											value_type;
-			typedef Alloc										allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer			pointer;
-			typedef typename allocator_type::const_pointer		const_pointer;
-
-			typedef ft::random_access_iterator<value_type>			iterator;
-			typedef ft::random_access_iterator<const value_type>	const_iterator;
-			typedef ft::reverse_iterator<iterator>				reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
-			typedef typename allocator_type::size_type			size_type;
+			typedef T														value_type;
+			typedef Alloc													allocator_type;
+			typedef typename allocator_type::reference						reference;
+			typedef typename allocator_type::const_reference				const_reference;
+			typedef typename allocator_type::pointer						pointer;
+			typedef typename allocator_type::const_pointer					const_pointer;
+			typedef ft::random_access_iterator<value_type>					iterator;
+			typedef ft::random_access_iterator<const value_type>			const_iterator;
+			typedef ft::reverse_iterator<iterator>							reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+			typedef typename allocator_type::size_type						size_type;
+			typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
 
 		private:
 			allocator_type	m_alloc;
@@ -67,13 +67,20 @@ namespace ft
 		/////
 			vector(const vector &other) :
 			m_alloc(other.m_alloc),
+			m_arr(NULL),
 			m_size(0),
 			m_capacity(0)
 			{
-				this->m_arr = this->m_alloc.allocate(other.m_capacity);
-				for (size_type i = 0; i < other.m_size; ++i)
-					this->m_alloc.construct(&this->m_arr[i], other.m_arr[i]);
-				this->m_capacity = other.m_capacity;
+				reserve(other.m_capacity);
+				try
+				{
+					std::uninitialized_copy(other.begin(), other.end(), this->m_arr);
+				}
+				catch(...)
+				{
+					this->m_alloc.deallocate(this->m_arr,this->m_capacity);
+					throw;
+				}
 				this->m_size = other.m_size;
 			}
 		/////
@@ -191,13 +198,21 @@ namespace ft
 				if (new_cap > max_size())
 					throw std::length_error("vector");
 				pointer new_arr = this->m_alloc.allocate(new_cap);
-				for (size_type i = 0; i < this->m_size;++i)
-					this->m_alloc.construct(&new_arr[i], this->m_arr[i]);
-				this->m_capacity = new_cap;
+				try
+				{
+					std::uninitialized_copy(this->begin(), this->end(), new_arr);
+				}
+				catch(...)
+				{
+					this->m_alloc.deallocate(this->m_arr,new_cap);
+					throw;
+				}
 				for (size_type i = 0; i < this->m_size; ++i)
-					this->m_alloc.destroy(&this->m_arr[i]);
+					this->m_alloc.destroy(this->m_arr + i);
+				if (this->m_size != 0)
 				this->m_alloc.deallocate(this->m_arr,this->m_capacity);
 				this->m_arr = new_arr;
+				this->m_capacity = new_cap;
 			}
 
 			reference operator [] (size_type pos)
@@ -279,10 +294,10 @@ namespace ft
 
 			void push_back(const_reference value)
 			{
-				if (this->m_size >= this->m_capacity)
-					reserve(this->m_capacity * 2 + (this->m_capacity == 0));
-				this->m_alloc.construct(&this->m_arr[m_size], value);
-				++m_size;
+				if (this->m_size == this->m_capacity)
+					(this->m_capacity == 0) ? reserve(2) : reserve(this->m_capacity * 2);
+				this->m_alloc.construct(this->m_arr + this->m_size, value);
+				m_size++;
 			}
 
 			void pop_back()
@@ -306,12 +321,12 @@ namespace ft
 					i += 1;
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += 1;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 					this->m_alloc.deallocate(this->m_arr, this->m_capacity);
 					this->m_arr = new_arr;
+					this->m_size += 1;
 				}
 				else
 				{
@@ -345,11 +360,11 @@ namespace ft
 						this->m_alloc.construct(new_arr + i, val);
 					for (iterator it = position; it != end(); ++it, ++i)
 						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += n;
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 						this->m_alloc.deallocate(this->m_arr, this->m_capacity);
+					this->m_size += n;
 					this->m_arr = new_arr;
 				}
 				else
@@ -375,29 +390,43 @@ namespace ft
 			void insert (iterator position, InputIterator first, InputIterator last,
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
+				
 				size_type n = 0;
+				size_type new_cap = this->m_capacity;
+				size_type	start = position - this->begin();
 				for (InputIterator it = first; it != last; ++it)
 					n++;
 				if (this->m_size + n >= this->m_capacity)
 				{
-					this->m_capacity = this->m_capacity * 2 + (this->m_capacity == 0);
-					if (this->m_capacity < this->m_size + n)
-						this->m_capacity = this->m_size + n;
-					pointer new_arr = this->m_alloc.allocate(this->m_capacity);
-					int i = 0;
-					for (iterator it = begin(); it != position; ++it, ++i)
-						this->m_alloc.construct(new_arr + i, *it);
-					InputIterator jt = first;
-					for (size_type j = 0; j < n; ++j, ++i, ++jt)
-						this->m_alloc.construct(new_arr + i, *jt);
-					for (iterator it = position; it != end(); ++it, ++i)
-						this->m_alloc.construct(new_arr + i, *it);
-					this->m_size += n;
+					new_cap = new_cap * 2 + (new_cap == 0);
+					if (new_cap < this->m_size + n)
+						new_cap = this->m_size + n;
+					pointer new_arr = this->m_alloc.allocate(new_cap);
+					// for (iterator it = begin(); it != position; ++it, ++i)
+					// 	this->m_alloc.construct(new_arr + i, *it);
+					// InputIterator jt = first;
+					// for (size_type j = 0; j < n; ++j, ++i, ++jt)
+					// 	this->m_alloc.construct(new_arr + i, *jt);
+					// for (iterator it = position; it != end(); ++it, ++i)
+					// 	this->m_alloc.construct(new_arr + i, *it);
+					try
+					{
+						std::uninitialized_copy(begin(), position, new_arr);
+						std::uninitialized_copy(first, last, new_arr + start);
+						std::uninitialized_copy(position, end(), new_arr + start + n);
+					}
+					catch(...)
+					{
+						this->m_alloc.deallocate(new_arr,new_cap);
+						throw;
+					}
 					for (size_type i = 0; i < this->m_size; ++i)
 						this->m_alloc.destroy(&this->m_arr[i]);
 					if (this->m_arr)
 						this->m_alloc.deallocate(this->m_arr, this->m_capacity);
+					this->m_size += n;
 					this->m_arr = new_arr;
+					this->m_capacity = new_cap;
 				}
 				else
 				{
@@ -440,31 +469,20 @@ namespace ft
 				}
 				this->m_size -= sum;
 				for (size_type i = 0; i < this->m_size; ++i)
-				{
 					this->m_alloc.construct(&(*first) + i, *(&(*last) + i));
-					//this->m_alloc.destroy(&(*last) + i + 1);
-				}
 				return (iterator(p));
 			}
 
 			void swap (vector& x)
 			{
-				allocator_type	m_alloc_new;
-				pointer			m_arr_new;
-				size_type		m_size_new;
-				size_type		m_capacity_new;
+				pointer				m_arr_new = this->m_arr;
+				size_type			m_size_new = this->m_size;
+				size_type			m_capacity_new = this->m_capacity;
 
-				m_alloc_new = this->m_alloc;
-				m_arr_new = this->m_arr;
-				m_size_new = this->m_size;
-				m_capacity_new = this->m_capacity;
-
-				this->m_alloc = x.m_alloc;
 				this->m_arr = x.m_arr;
 				this->m_size = x.m_size;
 				this->m_capacity = x.m_capacity;
 
-				x.m_alloc = m_alloc_new;
 				x.m_arr = m_arr_new;
 				x.m_size = m_size_new;
 				x.m_capacity = m_capacity_new;

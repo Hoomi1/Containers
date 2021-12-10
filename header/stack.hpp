@@ -16,10 +16,10 @@ namespace ft
 			typedef size_t		size_type;
 		
 		protected:
-			container_type container;
+			container_type c;
 
 		public:
-			explicit stack(const container_type& ctnr = container_type()) : container(ctnr) {}
+			explicit stack(const container_type& ctnr = container_type()) : c(ctnr) {}
 
 			~stack() {}
 
@@ -31,37 +31,37 @@ namespace ft
 			stack &operator=(const stack &other)
 			{
 				if (this != &other)
-					this->container = other.container;
+					this->c = other.c;
 			}
 
 			bool empty() const
 			{
-				return (this->container.empty());
+				return (this->c.empty());
 			}
 
 			size_type size() const
 			{
-				return (this->container.size());
+				return (this->c.size());
 			}
 
 			value_type& top()
 			{
-				return (this->container.back());
+				return (this->c.back());
 			}
 
 			const value_type& top() const
 			{
-				return (this->container.back());
+				return (this->c.back());
 			}
 
 			void push (const value_type& val)
 			{
-				return (this->container.push_back(val));
+				return (this->c.push_back(val));
 			}
 
 			void pop()
 			{
-				return (this->container.pop_back());
+				return (this->c.pop_back());
 			}
 
 			template <class U1, class U2>
@@ -86,37 +86,37 @@ namespace ft
 	template <class T, class Container>
 	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container == rhs.container);
+		return (lhs.c == rhs.c);
 	}
 
 	template <class T, class Container>
 	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container != rhs.container);
+		return (lhs.c != rhs.c);
 	}
 
 	template <class T, class Container>
 	bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container < rhs.container);
+		return (lhs.c < rhs.c);
 	}
 
 	template <class T, class Container>
 	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container <= rhs.container);
+		return (lhs.c <= rhs.c);
 	}
 
 	template <class T, class Container>
 	bool operator> (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container > rhs.container);
+		return (lhs.c > rhs.c);
 	}
 
 	template <class T, class Container>
 	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.container >= rhs.container);
+		return (lhs.c >= rhs.c);
 	}
 }
 #endif

@@ -40,6 +40,26 @@ namespace ft
 				this->_size = other._size;
 				this->_node_ptr = NULL;
 				this->_root = NULL;
+				copyTree(&this->_root, other._root);
+				// if (!this->_node_ptr)
+				// {
+				// 	this->_node_ptr = this->_root;
+				// 	if (this->_node_ptr)
+				// 		minimum(this->_node_ptr);
+				// 	return ;
+				// }
+				// if (this->_node_ptr->node_right)
+				// {
+				// 	this->_node_ptr = this->_node_ptr->node_right;
+				// 	minimum(this->_node_ptr);
+				// }
+				// else
+				// {
+				// 	while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
+				// 		this->_node_ptr = this->_node_ptr->node_parent;
+				// 	this->_node_ptr = this->_node_ptr->node_parent;
+				// }
+				left_minimum();
 			}
 
 			~RedBlackTree()
@@ -47,7 +67,182 @@ namespace ft
 				clearTree(this->_root);
 			}
 
+			RedBlackTree &operator=(const RedBlackTree &other)///////////////////////
+			{
+				if (this != &other)
+				{
+					clearTree(this->_root);
+					copyTree(&this->_root, other._root);
+					// if (!this->_node_ptr)
+					// {
+					// 	this->_node_ptr = this->_root;
+					// 	if (this->_node_ptr)
+					// 		minimum(this->_node_ptr);
+					// 	return ;
+					// }
+					// if (this->_node_ptr->node_right)
+					// {
+					// 	this->_node_ptr = this->_node_ptr->node_right;
+					// 	minimum(this->_node_ptr);
+					// }
+					// else
+					// {
+					// 	while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
+					// 		this->_node_ptr = this->_node_ptr->node_parent;
+					// 	this->_node_ptr = this->_node_ptr->node_parent;
+					// }
+					left_minimum();
+					this->_size = other._size;
+				}
+				return (*this);
+			}
+
+			void swap (RedBlackTree &other)
+			{
+				pointer new_node = this->_root;
+				this->_root = other._root;
+				other._root = new_node;
+				pointer new_size = this->_size;
+				this->_size = other._size;
+				other._size = new_size;
+				pointer new_node_ptr = this->_node_ptr;
+				this->_node_ptr = other._node_ptr;
+				other._node_ptr = new_node_ptr;
+			}
+
+			void erase(pointer position)
+			{
+				if (!position)
+					return ;
+				
+				// if (position == this->_node_ptr)
+				// {
+				// 	if (!this->_node_ptr)
+				// 	{
+				// 		this->_node_ptr = this->_root;
+				// 		if (this->_node_ptr)
+				// 			minimum(this->_node_ptr);
+				// 		return ;
+				// 	}
+				// 	if (this->_node_ptr->node_right)
+				// 	{
+				// 		this->_node_ptr = this->_node_ptr->node_right;
+				// 		minimum(this->_node_ptr);
+				// 	}
+				// 	else
+				// 	{
+				// 		while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
+				// 			this->_node_ptr = this->_node_ptr->node_parent;
+				// 		this->_node_ptr = this->_node_ptr->node_parent;
+				// 	}
+				// }
+				left_minimum();
+				delete_tree(position);
+				--this->_size;
+			}
+
+			pointer search_node(const value_type &value) const
+			{
+				pointer search = this->_root;
+				while (search)
+				{
+					if (this->_compare(value, search->value))
+						search = search->node_left;
+					else if (this->_compare(search->value, value))
+						search = search->node_right;
+					else
+						break ;
+				}
+				return (search);
+			}
+
+			bool erase(const value_type &value)
+			{
+				pointer search = search_node(value);
+				while (search)
+				{
+					if (this->_compare(value, search->value))
+						search = search->node_left;
+					else if (this->_compare(search->value, value))
+						search = search->node_right;
+					else
+						break ;
+				}
+
+				if (!search)
+					return (false);
+				
+				
+				left_minimum();
+				delete_tree(search);
+				--this->_size;
+				return (true);
+			}
+			////////////////
+			pointer insert(pointer position, const value_type& val)
+			{
+
+			}
+
+			pointer insert(const value_type& val)
+			{
+
+			}
+
+			////////////////
+			void clear()
+			{
+				clearTree(this->_root);
+				this->_size = 0;
+			}
+
 		private:
+			void copyTree(pointer *lnode, pointer rnode)///////////////??????????????
+			{
+				if (!rnode)
+					return ;
+				
+				lnode = create_node(rnode->value);
+				if (rnode->node_parent)
+				{
+					if (rnode->node_parent->node_right == rnode)
+						(*lnode)->node_parent->node_right = *lnode;
+					else
+						(*lnode)->node_parent->node_left = *lnode;
+				}
+				copyTree(&((*lnode)->node_left), rnode->node_left);
+				copyTree(&((*lnode)->node_right), rnode->node_right);
+			}
+
+			void left_minimum()
+			{
+				if (!this->_node_ptr)
+				{
+					this->_node_ptr = this->_root;
+					if (this->_node_ptr)
+						minimum(this->_node_ptr);
+					return ;
+				}
+				if (this->_node_ptr->node_right)
+				{
+					this->_node_ptr = this->_node_ptr->node_right;
+					minimum(this->_node_ptr);
+				}
+				else
+				{
+					while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
+						this->_node_ptr = this->_node_ptr->node_parent;
+					this->_node_ptr = this->_node_ptr->node_parent;
+				}
+			}
+
+			pointer minimum(pointer left_more)/////////////////////
+			{
+				while (left_more->node_left != NULL)
+					left_more = left_more->node_left;
+				return (left_more);
+			}
+
 			pointer get_grandparent(pointer x)
 			{
 				if (x->node_parent != NULL)
@@ -266,6 +461,10 @@ namespace ft
 			void delete_case_rebalance(pointer x)
 			{
 				pointer s = get_sibling(x);
+
+				if (!s)
+					return ;
+
 				if (x == x->node_parent->node_left)
 				{
 					if (s->red == BLACK)

@@ -20,8 +20,9 @@ namespace ft
 			typedef Compare			compare_key;
 			typedef size_t			size_type;
 			typedef Alloc			allocator_type;
-			typedef ft::Node<T>*	pointer;
-			typedef ft::Node<T>&	reference;
+			typedef ft::Node<T>		node_pointer;
+			typedef node_pointer*	pointer;
+			typedef node_pointer&	reference;
 			
 		private:
 			compare_key		_compare;
@@ -33,14 +34,16 @@ namespace ft
 		public:
 			RedBlackTree(const compare_key cmp) : _compare(cmp), _alloc(allocator_type()), _root(NULL), _node_ptr(NULL), _size(0) {}
 
-			RedBlackTree(const RedBlackTree &other)
+			RedBlackTree(const RedBlackTree &other) : _compare(other._compare), _alloc(other._alloc), _root(NULL), _node_ptr(NULL), _size(other._size)
 			{
-				this->_alloc = other._alloc;
-				this->_compare = other._compare;
-				this->_size = other._size;
-				this->_node_ptr = NULL;
-				this->_root = NULL;
-				copyTree(&this->_root, other._root);
+				// this->_compare = other._compare;
+				// this->_alloc = other._alloc;
+				// this->_root = NULL;
+				// this->_node_ptr = NULL;
+				// this->_size = other._size;
+				
+				
+				copyTree(&this->_root, other._root, NULL, NULL);
 				// if (!this->_node_ptr)
 				// {
 				// 	this->_node_ptr = this->_root;
@@ -72,7 +75,7 @@ namespace ft
 				if (this != &other)
 				{
 					clearTree(this->_root);
-					copyTree(&this->_root, other._root);
+					copyTree(&this->_root, other._root, NULL, NULL);
 					// if (!this->_node_ptr)
 					// {
 					// 	this->_node_ptr = this->_root;
@@ -96,13 +99,33 @@ namespace ft
 				}
 				return (*this);
 			}
+			
+			allocator_type get_alloc() const
+			{
+				return (this->_alloc);
+			}
+
+			pointer get_root() const
+			{
+				return (this->_root);
+			}
+
+			pointer get_node_ptr() const
+			{
+				return (this->_node_ptr);
+			}
+
+			size_type get_size() const
+			{
+				return (this->_size);
+			}
 
 			void swap (RedBlackTree &other)
 			{
 				pointer new_node = this->_root;
 				this->_root = other._root;
 				other._root = new_node;
-				pointer new_size = this->_size;
+				size_t new_size = this->_size;
 				this->_size = other._size;
 				other._size = new_size;
 				pointer new_node_ptr = this->_node_ptr;
@@ -114,29 +137,8 @@ namespace ft
 			{
 				if (!position)
 					return ;
-				
-				// if (position == this->_node_ptr)
-				// {
-				// 	if (!this->_node_ptr)
-				// 	{
-				// 		this->_node_ptr = this->_root;
-				// 		if (this->_node_ptr)
-				// 			minimum(this->_node_ptr);
-				// 		return ;
-				// 	}
-				// 	if (this->_node_ptr->node_right)
-				// 	{
-				// 		this->_node_ptr = this->_node_ptr->node_right;
-				// 		minimum(this->_node_ptr);
-				// 	}
-				// 	else
-				// 	{
-				// 		while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
-				// 			this->_node_ptr = this->_node_ptr->node_parent;
-				// 		this->_node_ptr = this->_node_ptr->node_parent;
-				// 	}
-				// }
-				left_minimum();
+				if (position == this->_node_ptr)
+					left_minimum();
 				delete_tree(position);
 				--this->_size;
 			}
@@ -146,10 +148,16 @@ namespace ft
 				pointer search = this->_root;
 				while (search)
 				{
-					if (this->_compare(value, search->value))
-						search = search->node_left;
-					else if (this->_compare(search->value, value))
+					// if (this->_compare(value, search->value))
+					// 	search = search->node_left;
+					// else if (this->_compare(search->value, value))
+					// 	search = search->node_right;
+					// else
+					// 	break ;
+					if (this->_compare(search->value, value))
 						search = search->node_right;
+					else if (this->_compare(value, search->value))
+						search = search->node_left;
 					else
 						break ;
 				}
@@ -161,32 +169,156 @@ namespace ft
 				pointer search = search_node(value);
 				while (search)
 				{
-					if (this->_compare(value, search->value))
-						search = search->node_left;
-					else if (this->_compare(search->value, value))
+					// if (this->_compare(value, search->value))
+					// 	search = search->node_left;
+					// else if (this->_compare(search->value, value))
+					// 	search = search->node_right;
+					// else
+					// 	break ;
+					if (this->_compare(search->value, value))
 						search = search->node_right;
+					else if (this->_compare(value, search->value))
+						search = search->node_left;
 					else
 						break ;
 				}
 
 				if (!search)
 					return (false);
-				
-				
-				left_minimum();
+				if (search == this->_node_ptr)
+					left_minimum();
 				delete_tree(search);
 				--this->_size;
 				return (true);
 			}
 			////////////////
-			pointer insert(pointer position, const value_type& val)
+			pointer next(pointer position)
 			{
-
+				if (!position)
+				{
+					position = this->_root;
+					if (position)
+					{
+						while (position->node_left)
+							position = position->node_left;
+					}
+					return (position);
+				}
+				if (position->node_right)
+				{
+					position = position->node_right;
+					while (position->node_left)
+						position = position->node_left;
+				}
+				else
+				{
+					while (position == position->node_parent->node_right && position->node_parent)
+						position = position->node_parent;
+					position = position->node_parent;
+				}
+				return (position);
 			}
 
-			pointer insert(const value_type& val)
+			pointer insert(pointer position, const value_type& val)////////////////////////??????????????????????
 			{
+				bool b_insert;
+				pointer copy_position = position;
 
+				if (!position || !this->_root)
+					insert(val, &b_insert);
+
+				// if (!position)
+				// {
+				// 	position = this->_root;
+				// 	if (position)
+				// 	{
+				// 		while (position->node_left)
+				// 			position = position->node_left;
+				// 	}
+				// }
+				// else if (position->node_right)
+				// {
+				// 	position = position->node_right;
+				// 	while (position->node_left)
+				// 		position = position->node_left;
+				// }
+				// else
+				// {
+				// 	while (position == position->node_parent->node_right && position->node_parent)
+				// 		position = position->node_parent;
+				// 	position = position->node_parent;
+				// }
+				position = next(position);
+
+				if (this->_compare(copy_position->value, val) && (!position || this->_compare(val, position->value)))
+				{
+					pointer new_node = create_node(val);
+					if (!copy_position->node_right)
+						copy_position->node_right = new_node;
+					else
+					{
+						pointer tmp = copy_position->node_right;
+						while (tmp->node_left)
+							tmp = tmp->node_left;
+						if (this->_node_ptr == tmp)
+							this->_node_ptr = new_node;
+						tmp->node_left = new_node;
+					}
+					if (this->_size == 0)
+						this->_node_ptr = new_node;
+					insert_case1(new_node);
+					++this->_size;
+					return (new_node);
+				}
+				else
+					return (insert(val, &b_insert));
+				return (NULL);
+			}
+
+			pointer insert(const value_type& val, bool *b_insert)///////////////////
+			{
+				pointer new_node = create_node(val);
+				pointer x = this->_root;
+
+				while(x)
+				{
+					if (this->_compare(val, x->value))
+					{
+						if (x->node_left)
+							x = x->node_left;
+						else
+						{
+							new_node->node_parent = x;
+							x->node_left = new_node;
+							if (this->_node_ptr == x)
+								this->_node_ptr = new_node;
+							break ;
+						}
+					}
+					else if (this->_compare(x->value, val))
+					{
+						if (x->node_right)
+							x = x->node_right;
+						else
+						{
+							new_node->node_parent = x;
+							x->node_right = new_node;
+							break ;
+						}
+					}
+					else
+					{
+						delete_node(new_node);
+						*b_insert = false;
+						return (x);
+					}
+				}
+				if (this->_size == 0)
+					this->_node_ptr = new_node;
+				insert_case1(new_node);
+				++this->_size;
+				*b_insert = true;
+				return (new_node);
 			}
 
 			////////////////
@@ -196,22 +328,47 @@ namespace ft
 				this->_size = 0;
 			}
 
+			void lower(const value_type &val, pointer node, pointer *other_node) const
+			{
+				if (*other_node || !node)
+					return ;
+				lower(val, node->node_left, other_node);
+				if (!this->_compare(node->value, val))
+					*other_node = node;
+				if (*other_node)
+					return ;
+				lower(val, node->node_right, other_node);
+			}
+
+			void upper(const value_type &val, pointer node, pointer *other_node) const
+			{
+				if (*other_node || !node)
+					return ;
+				upper(val, node->node_left, other_node);
+				if (this->_compare(node->value, val))
+					*other_node = node;
+				if (*other_node)
+					return ;
+				upper(val, node->node_right, other_node);
+			}
+			//////////////////////////////////////////////////////////////////////////
 		private:
-			void copyTree(pointer *lnode, pointer rnode)///////////////??????????????
+			void copyTree(pointer *lnode, pointer rnode, pointer lpar, pointer rpar)///////////////??????????????
 			{
 				if (!rnode)
 					return ;
 				
-				lnode = create_node(rnode->value);
-				if (rnode->node_parent)
+				*lnode = create_node(rnode->value);
+				(*lnode)->node_parent = lpar;
+				if (rpar)
 				{
-					if (rnode->node_parent->node_right == rnode)
-						(*lnode)->node_parent->node_right = *lnode;
+					if (rpar->node_right == rnode)
+						lpar->node_right = *lnode;
 					else
-						(*lnode)->node_parent->node_left = *lnode;
+						lpar->node_left = *lnode;
 				}
-				copyTree(&((*lnode)->node_left), rnode->node_left);
-				copyTree(&((*lnode)->node_right), rnode->node_right);
+				copyTree(&((*lnode)->node_left), rnode->node_left, *lnode, rnode);
+				copyTree(&((*lnode)->node_right), rnode->node_right, *lnode, rnode);
 			}
 
 			void left_minimum()
@@ -220,17 +377,23 @@ namespace ft
 				{
 					this->_node_ptr = this->_root;
 					if (this->_node_ptr)
-						minimum(this->_node_ptr);
+					{
+						while (this->_node_ptr->node_left != NULL)
+							this->_node_ptr = this->_node_ptr->node_left;
+					}
+						// minimum(this->_node_ptr);
 					return ;
 				}
 				if (this->_node_ptr->node_right)
 				{
 					this->_node_ptr = this->_node_ptr->node_right;
-					minimum(this->_node_ptr);
+					// minimum(this->_node_ptr);
+					while (this->_node_ptr->node_left)
+						this->_node_ptr = this->_node_ptr->node_left;
 				}
 				else
 				{
-					while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
+					while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->node_right)
 						this->_node_ptr = this->_node_ptr->node_parent;
 					this->_node_ptr = this->_node_ptr->node_parent;
 				}
@@ -246,13 +409,13 @@ namespace ft
 			pointer get_grandparent(pointer x)
 			{
 				if (x->node_parent != NULL)
-					return (x->node_parent->node_paren);
+					return (x->node_parent->node_parent);
 				return (NULL);
 			}
 
 			pointer get_uncle(pointer x)
 			{
-				pointer old = grandparent(x);
+				pointer old = get_grandparent(x);
 				if (old == NULL)
 					return (NULL);
 				if (x->node_parent == old->node_left)
@@ -399,28 +562,29 @@ namespace ft
 
 			pointer get_search_for_swap(pointer x)
 			{
-				x = x->node_left;
-				if (x)
+				pointer tmp = x;
+				tmp = tmp->node_left;
+				if (tmp)
 				{
-					while (x->node_right)
-						x = x->node_right;
+					while (tmp->node_right)
+						tmp = tmp->node_right;
 				}
-				else if (!x)
+				if (!tmp)
 				{
-					x = x->node_right;
-					if (x)
+					tmp = tmp->node_right;
+					if (tmp)
 					{
-						while (x->node_left)
-							x = x->node_left;
+						while (tmp->node_left)
+							tmp = tmp->node_left;
 					}
 				}
-				return (x);
+				return (tmp);
 			}
 
 			void swap_nodes(pointer before, const pointer after)
 			{
 				if (this->_root == before)
-					this->_root == after;
+					this->_root = after;
 				if (before->node_parent)
 				{
 					if (before->node_parent->node_left == before)
@@ -437,25 +601,27 @@ namespace ft
 				before->node_parent = after->node_parent;
 				after->node_parent = new_node;
 
-				if (after->node_left)
-					after->node_left->node_parent = before;
 				if (before->node_left)
 					before->node_left->node_parent = after;
+				if (after->node_left)
+					after->node_left->node_parent = before;
+
 				new_node = before->node_left;
 				before->node_left = after->node_left;
 				after->node_left = new_node;
 
-				if (after->node_right)
-					after->node_right->node_parent = before;
 				if (before->node_right)
 					before->node_right->node_parent = after;
+				if (after->node_right)
+					after->node_right->node_parent = before;
+
 				new_node = before->node_right;
 				before->node_right = after->node_right;
 				after->node_right = new_node;
 
-				bool new_color = before->red;
-				before->red = after->red;
-				after->red = new_color;
+				bool new_color = after->red;
+				after->red = before->red;
+				before->red = new_color;
 			}
 
 			void delete_case_rebalance(pointer x)
@@ -471,7 +637,9 @@ namespace ft
 					{
 						if (s->node_right && s->node_right->red == RED)
 						{
-							delete_case_RL_red_child(s, x);
+							//delete_case_RL_red_child(s, x);
+							
+							del_case_left_rotate(get_sibling(x), x);
 						}
 						else if (s->node_left && s->node_left->red == RED)
 						{
@@ -479,14 +647,15 @@ namespace ft
 							s->node_left->red = s->node_right->red;
 							s->node_right->red = color;
 							rotateRight(s);
-							delete_case_RL_red_child(s, x);
+							//delete_case_RL_red_child(s, x);
+							del_case_left_rotate(get_sibling(x), x);
 						}
-						else if (s->node_left->red == BLACK && s->node_right->red == BLACK)
+						else
 						{
 							s->red = RED;
 							if (x->node_parent->red == RED)
 								x->node_parent->red = BLACK;
-							else
+							else if (x->node_parent != this->_root)
 								delete_case_rebalance(x->node_parent);
 						}
 					}
@@ -498,10 +667,10 @@ namespace ft
 
 						if (s->node_left->node_right)
 						{
-							s->node_left->node_right = RED:
-							s->node_left = BLACK;
+							s->node_left->red = BLACK;
+							s->node_left->node_right->red = RED;
 						}
-						if (s != this->_root && s->red == BLACK)
+						if (s != this->_root)
 							delete_case_rebalance(s);
 					}
 				}
@@ -511,7 +680,8 @@ namespace ft
 					{
 						if (s->node_left && s->node_left->red == RED)
 						{
-							delete_case_RL_red_child(s, x)
+							//delete_case_RL_red_child(s, x);
+							del_case_right_rotate(get_sibling(x), x);
 						}
 						else if (s->node_right && s->node_right->red == RED)
 						{
@@ -519,14 +689,15 @@ namespace ft
 							s->node_right->red = s->node_left->red;
 							s->node_left->red = color;
 							rotateLeft(s);
-							delete_case_RL_red_child(s, x);
+							//delete_case_RL_red_child(s, x);
+							del_case_right_rotate(get_sibling(x), x);
 						}
-						else if (s->node_left->red == BLACK && s->node_right->red == BLACK)
+						else
 						{
 							s->red = RED;
 							if (x->node_parent->red == RED)
 								x->node_parent->red = BLACK;
-							else
+							else if (x->node_parent != this->_root)
 								delete_case_rebalance(x->node_parent);
 						}
 					}
@@ -534,36 +705,56 @@ namespace ft
 					{
 						s->node_parent->red = RED;
 						s->red = BLACK;
-						rotateLeft(s->node_parent);
+						rotateRight(s->node_parent);
 
 						if (s->node_right->node_left)
 						{
-							s->node_right->node_left = RED:
-							s->node_left = BLACK;
+							s->node_left->red = BLACK;
+							s->node_right->node_left->red = RED;
 						}
-						if (s != this->_root && s->red == BLACK)
+						if (s != this->_root)
 							delete_case_rebalance(s);
 					}
 				}
 			}
 
-			void delete_case_RL_red_child(pointer s, pointer x)
+			void del_case_left_rotate(pointer s, pointer x)
 			{
-				if (x == x->node_parent->node_right)
-				{
-					s->red = x->node_parent->red;
-					x->node_parent->red = BLACK;
-					x->node_left->red = BLACK;
-					rotateRight(x->node_parent);
-				}
-				if (x == x->node_parent->node_left)
-				{
-					s->red = x->node_parent->red;
-					x->node_parent->red = BLACK;
-					x->node_right->red = BLACK;
-					rotateLeft(x->node_parent);
-				}
+				s->red = x->node_parent->red;
+				x->node_parent->red = BLACK;
+				x->node_right->red = BLACK;
+				rotateLeft(x->node_parent);
+				return ;
 			}
+
+			void del_case_right_rotate(pointer s, pointer x)
+			{
+				s->red = x->node_parent->red;
+				x->node_parent->red = BLACK;
+				x->node_left->red = BLACK;
+				rotateRight(x->node_parent);
+				return ;
+			}
+
+			//void delete_case_RL_red_child(pointer s, pointer x)
+			// {
+			// 	if (x == x->node_parent->node_left)
+			// 	{
+			// 		s->red = x->node_parent->red;
+			// 		x->node_parent->red = BLACK;
+			// 		x->node_right->red = BLACK;
+			// 		rotateLeft(x->node_parent);
+			// 		return ;
+			// 	}
+			// 	if (x == x->node_parent->node_right)
+			// 	{
+			// 		s->red = x->node_parent->red;
+			// 		x->node_parent->red = BLACK;
+			// 		x->node_left->red = BLACK;
+			// 		rotateRight(x->node_parent);
+			// 		return ;
+			// 	}
+			// }
 
 			void delete_tree(pointer x)
 			{
@@ -575,12 +766,12 @@ namespace ft
 						delete_node(x);
 					else if (x->node_left)
 					{
-						swap_nodes(x, x->node_left)
+						swap_nodes(x, x->node_left);
 						delete_node(x);
 					}
 					else if (x->node_right)
 					{
-						swap_nodes(x, x->node_right)
+						swap_nodes(x, x->node_right);
 						delete_node(x);
 					}
 					else
@@ -591,22 +782,20 @@ namespace ft
 				}
 				else
 				{
-					if (x->red == BLACK)
-					{
-						if (x != this->_root)
-						{	
-							delete_case_rebalance(x);
-							delete_node(x);
-							return ;
-						}
-						delete_node(x);
-					}
 					if (x->red == RED)
 						delete_node(x);
+					else
+					{
+						if (x != this->_root)
+							delete_case_rebalance(x);
+						delete_node(x);
+					}
+					// else //if (x->red == RED)
+					// 	delete_node(x);
 				}
 			}
 
-			void create_node(const value_type &value)
+			pointer create_node(const value_type &value)
 			{
 				pointer new_node = this->_alloc.allocate(1);
 				this->_alloc.construct(new_node, value);
@@ -617,10 +806,10 @@ namespace ft
 			{
 				if (node->node_parent)
 				{
-					if (node->node_parent->node_right == node)
-						node->node_parent->node_right = NULL;
-					else
+					if (node->node_parent->node_left == node)
 						node->node_parent->node_left = NULL;
+					else
+						node->node_parent->node_right = NULL;
 				}
 				this->_alloc.destroy(node);
 				this->_alloc.deallocate(node, 1);

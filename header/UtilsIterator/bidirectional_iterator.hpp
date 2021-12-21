@@ -37,7 +37,7 @@ namespace ft
 		Node(const Node &n) : node_parent(n.node_parent),
 								node_left(n.node_left),
 								node_right(n.node_right),
-								red(n.red)
+								red(n.red),
 								value(n.value){}
 		
 		Node(const Node *n, const Data &rvalue) : node_parent(n),
@@ -45,6 +45,13 @@ namespace ft
 												node_right(NULL),
 												red(0),
 												value(rvalue) {}
+
+		
+		Node(const Data &v) : node_parent(NULL),
+											node_left(NULL),
+											node_right(NULL),
+											red(0),
+											value(v) {}
 
 		Node &operator=(const Node &other)
 		{
@@ -62,7 +69,7 @@ namespace ft
 
 ///////////////////////////////////////////////////////////////////////////////
 
-	template <class Compare, typename T>
+	template <bool Compare, typename T>
 	class bidirectional_iterator
 	{
 		public:
@@ -73,62 +80,115 @@ namespace ft
 			// typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::reference			reference;
 			typedef typename ft::enable_because<Compare, const T *, T *>::type					pointer;
 			typedef typename ft::enable_because<Compare, const T &, T &>::type					reference;
+			typedef Node<value_type> *node_pointer;
 
 		private:
-			Node<value_type> *node_ptr;
-			Node<value_type> *root;
+			node_pointer	node_ptr;
+			node_pointer	root;
 
-			Node min(Node *x)
-			{
-				if (x->node_right == NULL)
-					return (x);
-				return (min(x->node_left));
-			}
+			// Node min(Node *x)
+			// {
+			// 	if (x->node_right == NULL)
+			// 		return (x);
+			// 	return (min(x->node_left));
+			// }
 
-			Node max(Node *x)
-			{
-				if (x->node_right == NULL)
-					return (x);
-				return (max(x->node_right));
-			}
+			// Node max(Node *x)
+			// {
+			// 	if (x->node_right == NULL)
+			// 		return (x);
+			// 	return (max(x->node_right));
+			// }
 
-			Node setnext()
+			// Node setnext()
+			// {
+			// 	if (node_ptr->node_right != NULL)
+			// 		return (min(node_ptr->node_right));
+			// 	Node<value_type> *new_node = node_ptr->node_parent;
+			// 	while (new_node != NULL && node_ptr == new_node->node_right)
+			// 	{
+			// 		node_ptr = new_node;
+			// 		new_node = new_node->node_parent;
+			// 	}
+			// 	return (new_node);
+			// }
+
+			// Node setprev()
+			// {
+			// 	if (node_ptr->node_left != NULL)
+			// 		return (max(node_ptr->node_parent));
+			// 	Node<value_type> *new_node = node_ptr->node_parent;
+			// 	while (new_node != NULL && node_ptr == new_node->node_left)
+			// 	{
+			// 		node_ptr = new_node;
+			// 		new_node = new_node->node_parent;
+			// 	}
+			// 	return (new_node);
+			// }
+
+			void setnext()
 			{
-				if (node_ptr->node_right != NULL)
-					return (min(node_ptr->node_right));
-				Node<value_type> *new_node = node_ptr->node_parent;
-				while (new_node != NULL && node_ptr == new_node->node_right)
+				if (!this->node_ptr)
 				{
-					node_ptr = new_node;
-					new_node = new_node->node_parent;
+					this->node_ptr = this->root;
+					if (this->node_ptr)
+					{
+						while (this->node_ptr->node_left)
+							this->node_ptr = this->node_ptr->node_left;
+					}
+					return ;
 				}
-				return (new_node);
+				if (this->node_ptr->node_right)
+				{
+					this->node_ptr = this->node_ptr->node_right;
+					while (this->node_ptr->node_left)
+						this->node_ptr = this->node_ptr->node_left;
+				}
+				else
+				{
+					while (this->node_ptr->node_parent && this->node_ptr == this->node_ptr->node_parent->node_right)
+						this->node_ptr = this->node_ptr->node_parent;
+					this->node_ptr = this->node_ptr->node_parent;
+				}
 			}
 
-			Node setprev()
+			void setprev()
 			{
-				if (node_ptr->node_left != NULL)
-					return (max(node_ptr->node_parent));
-				Node<value_type> *new_node = node_ptr->node_parent;
-				while (new_node != NULL && node_ptr == new_node->node_left)
+				if (!this->node_ptr)
 				{
-					node_ptr = new_node;
-					new_node = new_node->node_parent;
+					this->node_ptr = this->root;
+					if (this->node_ptr)
+					{
+						while (this->node_ptr->node_right)
+							this->node_ptr = this->node_ptr->node_right;
+					}
+					return ;
 				}
-				return (new_node);
+				if (this->node_ptr->node_left)
+				{
+					this->node_ptr = this->node_ptr->node_left;
+					while (this->node_ptr->node_right)
+						this->node_ptr = this->node_ptr->node_right;
+				}
+				else
+				{
+					while (this->node_ptr->node_parent && this->node_ptr == this->node_ptr->node_parent->node_left)
+						this->node_ptr = this->node_ptr->node_parent;
+					this->node_ptr = this->node_ptr->node_parent;
+				}
 			}
 
 		public:
-			bidirectional_iterator() {}
+			bidirectional_iterator() : node_ptr(NULL), root(NULL){}
 
 			bidirectional_iterator(const bidirectional_iterator &other) : node_ptr(other.node_ptr), root(other.root)
 			{
 			}
 
-			bidirectional_iterator(Node *node_ptr, Node *root)
+			bidirectional_iterator(node_pointer node_ptr, node_pointer root) : node_ptr(node_ptr), root(root)
 			{
-				this->node_ptr = node_ptr;
-				this->root = root;
+				// this->node_ptr = node_ptr;
+				// this->root = root;
 			}
 
 			virtual ~bidirectional_iterator() {}
@@ -140,7 +200,17 @@ namespace ft
 					this->node_ptr = other.node_ptr;
 					this->root = root;
 				}
-				return (*other);
+				return (*this);
+			}
+
+			node_pointer base()
+			{
+				return (this->node_ptr);
+			}
+
+			node_pointer base() const
+			{
+				return (this->node_ptr);
 			}
 
 			reference				operator*() const
@@ -179,14 +249,14 @@ namespace ft
 				return (it);
 			}
 
-			template<bool Iter1, bool Iter2, typename T>
-			friend bool operator==(const bidirectional_iterator<Iter1, T> &lhs, const bidirectional_iterator<Iter2, T> &rhs)
+			template<bool Iter1, bool Iter2, typename U>
+			friend bool operator==(const bidirectional_iterator<Iter1, U> &lhs, const bidirectional_iterator<Iter2, U> &rhs)
 			{
 				return (lhs.node_ptr == rhs.node_ptr);
 			}
 
-			template<bool Iter1, bool Iter2, typename T>
-			friend bool operator!=(const bidirectional_iterator<Iter1, T> &lhs, const bidirectional_iterator<Iter2, T> &rhs)
+			template<bool Iter1, bool Iter2, typename U>
+			friend bool operator!=(const bidirectional_iterator<Iter1, U> &lhs, const bidirectional_iterator<Iter2, U> &rhs)
 			{
 				return (lhs.node_ptr != rhs.node_ptr);
 			}

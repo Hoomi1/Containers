@@ -20,9 +20,9 @@ namespace ft
 			typedef Compare			compare_key;
 			typedef size_t			size_type;
 			typedef Alloc			allocator_type;
-			typedef ft::Node<T>		node_pointer;
-			typedef node_pointer*	pointer;
-			typedef node_pointer&	reference;
+			typedef ft::Node<T>		node_type;
+			typedef node_type*		pointer;
+			typedef node_type&		reference;
 			
 		private:
 			compare_key		_compare;
@@ -125,7 +125,7 @@ namespace ft
 				pointer new_node = this->_root;
 				this->_root = other._root;
 				other._root = new_node;
-				size_t new_size = this->_size;
+				size_type new_size = this->_size;
 				this->_size = other._size;
 				other._size = new_size;
 				pointer new_node_ptr = this->_node_ptr;
@@ -277,8 +277,8 @@ namespace ft
 
 			pointer insert(const value_type& val, bool *b_insert)///////////////////
 			{
-				pointer new_node = create_node(val);
 				pointer x = this->_root;
+				pointer new_node = create_node(val);
 
 				while(x)
 				{
@@ -324,8 +324,8 @@ namespace ft
 			////////////////
 			void clear()
 			{
-				clearTree(this->_root);
 				this->_size = 0;
+				clearTree(this->_root);
 			}
 
 			void lower(const value_type &val, pointer node, pointer *other_node) const
@@ -333,10 +333,10 @@ namespace ft
 				if (*other_node || !node)
 					return ;
 				lower(val, node->node_left, other_node);
-				if (!this->_compare(node->value, val))
-					*other_node = node;
 				if (*other_node)
 					return ;
+				if (!this->_compare(node->value, val))
+					*other_node = node;
 				lower(val, node->node_right, other_node);
 			}
 
@@ -345,10 +345,10 @@ namespace ft
 				if (*other_node || !node)
 					return ;
 				upper(val, node->node_left, other_node);
-				if (this->_compare(node->value, val))
-					*other_node = node;
 				if (*other_node)
 					return ;
+				if (this->_compare(val, node->value))
+					*other_node = node;
 				upper(val, node->node_right, other_node);
 			}
 			//////////////////////////////////////////////////////////////////////////
@@ -378,7 +378,7 @@ namespace ft
 					this->_node_ptr = this->_root;
 					if (this->_node_ptr)
 					{
-						while (this->_node_ptr->node_left != NULL)
+						while (this->_node_ptr->node_left)
 							this->_node_ptr = this->_node_ptr->node_left;
 					}
 						// minimum(this->_node_ptr);
@@ -470,8 +470,8 @@ namespace ft
 			{
 				if (x->node_parent == NULL)
 				{
-					x->red = BLACK;
 					this->_root = x;
+					x->red = BLACK;
 				}
 				else
 					insert_case2(x);
@@ -479,9 +479,11 @@ namespace ft
 
 			void insert_case2(pointer x)
 			{
-				if (x->node_parent->red == BLACK) ///////
-					return;
-				else
+				// if (x->node_parent->red == BLACK) ///////
+				// 	return;
+				// else
+				// 	insert_case3(x);
+				if (x->node_parent->red == RED)
 					insert_case3(x);
 			}
 
@@ -530,18 +532,18 @@ namespace ft
 					rotateLeft(old);
 			}
 
-			//pointer get_right_min(pointer x)
-			//{
-			//	x = x->node_right;
-			//	if (x)
-			//	{
-			//		while (x->node_left)
-			//			x = x->node_left;
-			//	}
-			//	return (x);
-			//}
+			pointer get_right_min(pointer x)
+			{
+				x = x->node_right;
+				if (x)
+				{
+					while (x->node_left)
+						x = x->node_left;
+				}
+				return (x);
+			}
 
-			/*pointer get_left_max(pointer x)
+			pointer get_left_max(pointer x)
 			{
 				x = x->node_left;
 				if (x)
@@ -550,7 +552,7 @@ namespace ft
 						x = x->node_right;
 				}
 				return (x);
-			}*/
+			}
 
 			pointer get_sibling(pointer x)
 			{
@@ -562,22 +564,25 @@ namespace ft
 
 			pointer get_search_for_swap(pointer x)
 			{
-				pointer tmp = x;
-				tmp = tmp->node_left;
-				if (tmp)
-				{
-					while (tmp->node_right)
-						tmp = tmp->node_right;
-				}
-				if (!tmp)
-				{
-					tmp = tmp->node_right;
-					if (tmp)
-					{
-						while (tmp->node_left)
-							tmp = tmp->node_left;
-					}
-				}
+				pointer tmp = get_left_max(x);
+				if(!tmp)
+					tmp = get_right_min(x);
+				// pointer tmp = x;
+				// tmp = tmp->node_left;
+				// if (tmp)
+				// {
+				// 	while (tmp->node_right)
+				// 		tmp = tmp->node_right;
+				// }
+				// if (tmp != NULL)
+				// {
+				// 	tmp = tmp->node_right;
+				// 	if (tmp)
+				// 	{
+				// 		while (tmp->node_left)
+				// 			tmp = tmp->node_left;
+				// 	}
+				// }
 				return (tmp);
 			}
 
@@ -722,7 +727,7 @@ namespace ft
 			{
 				s->red = x->node_parent->red;
 				x->node_parent->red = BLACK;
-				x->node_right->red = BLACK;
+				s->node_right->red = BLACK;
 				rotateLeft(x->node_parent);
 				return ;
 			}
@@ -731,7 +736,7 @@ namespace ft
 			{
 				s->red = x->node_parent->red;
 				x->node_parent->red = BLACK;
-				x->node_left->red = BLACK;
+				s->node_left->red = BLACK;
 				rotateRight(x->node_parent);
 				return ;
 			}
@@ -759,12 +764,26 @@ namespace ft
 			void delete_tree(pointer x)
 			{
 				pointer child = get_search_for_swap(x);
-				if (child)
+				if (!child)
+				{
+					if (x->red == RED)
+						delete_node(x);
+					else
+					{
+						if (x != this->_root)
+							delete_case_rebalance(x);
+						delete_node(x);
+					}
+					
+				}
+				else
 				{
 					swap_nodes(x, child);
 					if (x->red == RED)
 						delete_node(x);
-					else if (x->node_left)
+					else
+					{
+					if (x->node_left)
 					{
 						swap_nodes(x, x->node_left);
 						delete_node(x);
@@ -779,16 +798,6 @@ namespace ft
 						delete_case_rebalance(x);
 						delete_node(x);
 					}
-				}
-				else
-				{
-					if (x->red == RED)
-						delete_node(x);
-					else
-					{
-						if (x != this->_root)
-							delete_case_rebalance(x);
-						delete_node(x);
 					}
 					// else //if (x->red == RED)
 					// 	delete_node(x);

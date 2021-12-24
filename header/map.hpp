@@ -36,9 +36,9 @@ namespace ft
 					Compare comp;
 					value_compare (Compare c) : comp(c) {}
 				public:
-					// typedef bool result_type;
-					// typedef value_type first_argument_type;
-					// typedef value_type second_argument_type;
+					typedef bool result_type;
+					typedef value_type first_argument_type;
+					typedef value_type second_argument_type;
 					bool operator() (const value_type& x, const value_type& y) const
 					{
 						return comp(x.first, y.first);
@@ -56,7 +56,7 @@ namespace ft
 
 		public:
 			explicit map(const key_compare& comp = key_compare(),
-						const allocator_type& alloc = allocator_type()) : m_container(value_compare(comp)),
+						const allocator_type& alloc = allocator_type()) : m_container(node_container(value_compare(comp))),
 																		m_compare(comp),
 																		m_alloc(alloc)
 			{
@@ -68,7 +68,7 @@ namespace ft
 			template <class InputIterator>
 			map(InputIterator first, InputIterator last,
 				const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type()) : m_container(value_compare(comp)),
+				const allocator_type& alloc = allocator_type()) : m_container(node_container(value_compare(comp))),
 																m_compare(comp),
 																m_alloc(alloc)
 			{
@@ -173,9 +173,14 @@ namespace ft
 			template <class InputIterator>
 			void insert(InputIterator first, InputIterator last)
 			{
-				InputIterator it = first;
-				for(; it != last; ++it)
-					insert(*it);
+				// InputIterator it = first;
+				// for(; it != last; ++it)
+				// 	insert(*it);
+				while (first != last)
+				{
+					insert(*first);
+					++first;
+				}
 			}
 
 			void erase(iterator position)
@@ -192,8 +197,12 @@ namespace ft
 			void erase(iterator first, iterator last)
 			{
 				iterator it = first;
-				for(; it != last; ++it)
+				for(; first != last;)
+				{
+					
 					erase(it);
+					it = ++first;
+				}
 			}
 
 			void swap(map& x)
@@ -256,10 +265,14 @@ namespace ft
 
 			iterator upper_bound(const key_type& k)
 			{
-				ft::pair<const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
-				node_pointer other = NULL;
-				m_container.upper(value, m_container.get_root(), &other);
-				return (iterator(other, m_container.get_root()));
+				// ft::pair<const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
+				// node_pointer other = NULL;
+				// m_container.upper(value, m_container.get_root(), &other);
+				// return (iterator(other, m_container.get_root()));
+				node_pointer sougth = NULL;
+				ft::pair<const key_type, mapped_type> p = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
+				m_container.upper(p, m_container.get_root(), &sougth);
+				return iterator(sougth, m_container.get_root());
 			}
 
 			const_iterator upper_bound(const key_type& k) const
@@ -282,7 +295,7 @@ namespace ft
 
 			allocator_type get_allocator() const
 			{
-				return (m_container.get_alloc());
+				return (this->m_alloc);
 			}
 	};
 

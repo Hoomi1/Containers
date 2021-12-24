@@ -267,7 +267,7 @@ namespace ft
 		second_type second;
 
 	public:
-		pair() : first(), second() {}
+		pair() : first(first_type()), second(second_type()) {}
 
 		pair(const first_type &a, const second_type &b) : first(a), second(b) {}
 

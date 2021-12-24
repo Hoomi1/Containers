@@ -7,13 +7,13 @@ namespace ft
 	template <bool B, class T, class U>
 	struct enable_because
 	{
-		typedef U type;
+		typedef T type;
 	};
 
 	template <class T, class U>
-	struct enable_because<true, T, U>
+	struct enable_because<false, T, U>
 	{
-		typedef T type;
+		typedef U type;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -86,46 +86,6 @@ namespace ft
 			node_pointer	node_ptr;
 			node_pointer	root;
 
-			// Node min(Node *x)
-			// {
-			// 	if (x->node_right == NULL)
-			// 		return (x);
-			// 	return (min(x->node_left));
-			// }
-
-			// Node max(Node *x)
-			// {
-			// 	if (x->node_right == NULL)
-			// 		return (x);
-			// 	return (max(x->node_right));
-			// }
-
-			// Node setnext()
-			// {
-			// 	if (node_ptr->node_right != NULL)
-			// 		return (min(node_ptr->node_right));
-			// 	Node<value_type> *new_node = node_ptr->node_parent;
-			// 	while (new_node != NULL && node_ptr == new_node->node_right)
-			// 	{
-			// 		node_ptr = new_node;
-			// 		new_node = new_node->node_parent;
-			// 	}
-			// 	return (new_node);
-			// }
-
-			// Node setprev()
-			// {
-			// 	if (node_ptr->node_left != NULL)
-			// 		return (max(node_ptr->node_parent));
-			// 	Node<value_type> *new_node = node_ptr->node_parent;
-			// 	while (new_node != NULL && node_ptr == new_node->node_left)
-			// 	{
-			// 		node_ptr = new_node;
-			// 		new_node = new_node->node_parent;
-			// 	}
-			// 	return (new_node);
-			// }
-
 			void setnext()
 			{
 				if (!this->node_ptr)
@@ -176,6 +136,7 @@ namespace ft
 						this->node_ptr = this->node_ptr->node_parent;
 					this->node_ptr = this->node_ptr->node_parent;
 				}
+				
 			}
 
 		public:

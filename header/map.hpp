@@ -32,16 +32,15 @@ namespace ft
 			class value_compare : std::binary_function<value_type, value_type, bool>
 			{
 				friend class map<key_type, mapped_type, key_compare, Alloc>;
+
 				protected:
 					Compare comp;
-					value_compare (Compare c) : comp(c) {}
+					value_compare(Compare c) : comp(c) {}
+
 				public:
-					typedef bool result_type;
-					typedef value_type first_argument_type;
-					typedef value_type second_argument_type;
-					bool operator() (const value_type& x, const value_type& y) const
+					bool operator()(const value_type &x, const value_type &y) const
 					{
-						return comp(x.first, y.first);
+						return (comp(x.first, y.first));
 					}
 			};
 		private:
@@ -53,7 +52,7 @@ namespace ft
 			node_container	m_container;
 			key_compare		m_compare;
 			allocator_type	m_alloc;
-
+			
 		public:
 			explicit map(const key_compare& comp = key_compare(),
 						const allocator_type& alloc = allocator_type()) : m_container(node_container(value_compare(comp))),
@@ -106,7 +105,7 @@ namespace ft
 
 			iterator end()
 			{
-				return(iterator(NULL, m_container.get_root()));
+				return (iterator(NULL, m_container.get_root()));
 			}
 
 			const_iterator end() const
@@ -152,6 +151,24 @@ namespace ft
 				return (m_container.get_alloc().max_size());
 			}
 
+			mapped_type& at(const key_type& k)
+			{
+				ft::pair< const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
+				node_pointer tmp = m_container.search_node(value);
+				if (!tmp)
+					throw std::out_of_range("map");
+				return (tmp->value.second);
+			}
+
+			const mapped_type& at(const key_type& k) const
+			{
+				ft::pair< const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
+				node_pointer tmp = m_container.search_node(value);
+				if (!tmp)
+					throw std::out_of_range("map");
+				return (tmp->value.second);
+			}
+
 			mapped_type& operator[](const key_type& k)
 			{
 				ft::pair< const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
@@ -168,6 +185,7 @@ namespace ft
 			iterator insert(iterator position, const value_type& val)
 			{
 				return iterator(m_container.insert(position.base(), val), m_container.get_root());
+				//return iterator(m_container.insert(position.base(), val), m_container.get_root());
 			}
 
 			template <class InputIterator>
@@ -196,12 +214,10 @@ namespace ft
 
 			void erase(iterator first, iterator last)
 			{
-				iterator it = first;
-				for(; first != last;)
+				for(iterator it; first != last;)
 				{
-					
+					it = first++;
 					erase(it);
-					it = ++first;
 				}
 			}
 
@@ -302,22 +318,35 @@ namespace ft
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
-		if (lhs.size() != rhs.size())
-			return (false);
-		else
-			return (true);
+		// if (lhs.size() != rhs.size())
+		// 	return (false);
+		// else
+		// {
+		// 	iterator first1 = lhs.begin();
+		// 	iterator first2 = rhs.begin();
+		// 	iterator last1 = lhs.end();
+		// 	while (first1 != last1)
+		// 	{
+		// 		if (!(*first1 == *first2))
+		// 			return false;
+		// 		++first1;
+		// 		++first2;
+		// 	}
+		// 	return true;
+		// }
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator!=(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
-		return (!(lhs.size() == rhs.size()));
+		return (!(lhs == rhs));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator<(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>

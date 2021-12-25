@@ -184,12 +184,12 @@ namespace ft
 				}
 
 				if (!search)
-					return (false);
+					return (0);
 				if (search == this->_node_ptr)
 					left_minimum();
 				delete_tree(search);
 				--this->_size;
-				return (true);
+				return (1);
 			}
 			////////////////
 			pointer next(pointer position)
@@ -222,32 +222,10 @@ namespace ft
 			pointer insert(pointer position, const value_type& val)////////////////////////??????????????????????
 			{
 				bool b_insert;
+				if (!_root || !position)
+					return (insert(val, &b_insert));
+
 				pointer copy_position = position;
-
-				if (!position || !this->_root)
-					insert(val, &b_insert);
-
-				// if (!position)
-				// {
-				// 	position = this->_root;
-				// 	if (position)
-				// 	{
-				// 		while (position->node_left)
-				// 			position = position->node_left;
-				// 	}
-				// }
-				// else if (position->node_right)
-				// {
-				// 	position = position->node_right;
-				// 	while (position->node_left)
-				// 		position = position->node_left;
-				// }
-				// else
-				// {
-				// 	while (position == position->node_parent->node_right && position->node_parent)
-				// 		position = position->node_parent;
-				// 	position = position->node_parent;
-				// }
 				position = next(position);
 
 				if (this->_compare(copy_position->value, val) && (!position || this->_compare(val, position->value)))
@@ -260,12 +238,12 @@ namespace ft
 						pointer tmp = copy_position->node_right;
 						while (tmp->node_left)
 							tmp = tmp->node_left;
-						if (this->_node_ptr == tmp)
-							this->_node_ptr = new_node;
+						if (_node_ptr == tmp)
+							_node_ptr = new_node;
 						tmp->node_left = new_node;
 					}
 					if (this->_size == 0)
-						this->_node_ptr = new_node;
+						_node_ptr = new_node;
 					insert_case1(new_node);
 					++this->_size;
 					return (new_node);
@@ -397,6 +375,31 @@ namespace ft
 						this->_node_ptr = this->_node_ptr->node_parent;
 					this->_node_ptr = this->_node_ptr->node_parent;
 				}
+		// 		if (!_node_ptr)
+		// {
+		// 	_node_ptr = _root;
+		// 	if (_node_ptr)
+		// 	{
+		// 		while (_node_ptr->node_left)
+		// 			_node_ptr = _node_ptr->node_left;
+		// 	}
+
+		// 	return ;
+		// }
+
+		// if (_node_ptr->node_right)
+		// {
+		// 	_node_ptr = _node_ptr->node_right;
+		// 	while (_node_ptr->node_left)
+		// 		_node_ptr = _node_ptr->node_left;
+		// }
+		// else
+		// {
+		// 	while (_node_ptr->node_parent && _node_ptr == _node_ptr->node_parent->node_right)
+		// 		_node_ptr = _node_ptr->node_parent;
+
+		// 	_node_ptr = _node_ptr->node_parent;
+		// }
 			}
 
 			pointer minimum(pointer left_more)/////////////////////
@@ -648,9 +651,11 @@ namespace ft
 						}
 						else if (s->node_left && s->node_left->red == RED)
 						{
-							bool color = s->node_left->red;
-							s->node_left->red = s->node_right->red;
-							s->node_right->red = color;
+							//bool color = s->node_left->red;
+							// s->node_left->red = s->node_right->red;
+							// s->node_right->red = color;
+							s->red = RED;
+							s->node_left->red = BLACK;
 							rotateRight(s);
 							//delete_case_RL_red_child(s, x);
 							del_case_left_rotate(get_sibling(x), x);
@@ -690,9 +695,11 @@ namespace ft
 						}
 						else if (s->node_right && s->node_right->red == RED)
 						{
-							bool color = s->node_right->red;
-							s->node_right->red = s->node_left->red;
-							s->node_left->red = color;
+							// bool color = s->node_right->red;
+							// s->node_right->red = s->node_left->red;
+							// s->node_left->red = color;
+							s->red = RED;
+							s->node_right->red = BLACK;
 							rotateLeft(s);
 							//delete_case_RL_red_child(s, x);
 							del_case_right_rotate(get_sibling(x), x);
@@ -714,7 +721,7 @@ namespace ft
 
 						if (s->node_right->node_left)
 						{
-							s->node_left->red = BLACK;
+							s->node_right->red = BLACK;
 							s->node_right->node_left->red = RED;
 						}
 						if (s != this->_root)
@@ -783,21 +790,21 @@ namespace ft
 						delete_node(x);
 					else
 					{
-					if (x->node_left)
-					{
-						swap_nodes(x, x->node_left);
-						delete_node(x);
-					}
-					else if (x->node_right)
-					{
-						swap_nodes(x, x->node_right);
-						delete_node(x);
-					}
-					else
-					{
-						delete_case_rebalance(x);
-						delete_node(x);
-					}
+						if (x->node_left)
+						{
+							swap_nodes(x, x->node_left);
+							delete_node(x);
+						}
+						else if (x->node_right)
+						{
+							swap_nodes(x, x->node_right);
+							delete_node(x);
+						}
+						else
+						{
+							delete_case_rebalance(x);
+							delete_node(x);
+						}
 					}
 					// else //if (x->red == RED)
 					// 	delete_node(x);

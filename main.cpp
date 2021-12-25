@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <vector.hpp>
 #include "header/vector.hpp"
 #include "header/stack.hpp"
 #include "header/map.hpp"

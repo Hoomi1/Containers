@@ -2,8 +2,8 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include "UtilsIterator/iterator.hpp"
-#include "UtilsIterator/random_access_iterator.hpp"
+#include "iterator.hpp"
+#include "random_access_iterator.hpp"
 
 namespace ft
 {

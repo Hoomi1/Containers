@@ -2,9 +2,9 @@
 #define MAP_HPP
 
 #include <iostream>
-#include "UtilsIterator/iterator.hpp"
-#include "UtilsIterator/bidirectional_iterator.hpp"
-#include "UtilsIterator/RedBlackTree.hpp"
+#include "iterator.hpp"
+#include "bidirectional_iterator.hpp"
+#include "RedBlackTree.hpp"
 
 namespace ft
 {

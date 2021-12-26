@@ -1,6 +1,6 @@
 TEST		=	test
 TEST_STD	=	test_std
-SEED		=	11111
+SEED		=	10024
 
 HFILE	=	header
 SFILE	=	tests
@@ -50,5 +50,6 @@ fclean: clean
 	@rm -f $(TEST_STD)
 
 re: fclean all
+stdre: fclean std
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re stdre

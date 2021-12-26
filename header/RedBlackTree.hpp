@@ -36,32 +36,7 @@ namespace ft
 
 			RedBlackTree(const RedBlackTree &other) : _compare(other._compare), _alloc(other._alloc), _root(NULL), _node_ptr(NULL), _size(other._size)
 			{
-				// this->_compare = other._compare;
-				// this->_alloc = other._alloc;
-				// this->_root = NULL;
-				// this->_node_ptr = NULL;
-				// this->_size = other._size;
-				
-				
 				copyTree(&this->_root, other._root, NULL, NULL);
-				// if (!this->_node_ptr)
-				// {
-				// 	this->_node_ptr = this->_root;
-				// 	if (this->_node_ptr)
-				// 		minimum(this->_node_ptr);
-				// 	return ;
-				// }
-				// if (this->_node_ptr->node_right)
-				// {
-				// 	this->_node_ptr = this->_node_ptr->node_right;
-				// 	minimum(this->_node_ptr);
-				// }
-				// else
-				// {
-				// 	while (this->_node_ptr->node_parent && this->_node_ptr == this->_node_ptr->node_parent->right)
-				// 		this->_node_ptr = this->_node_ptr->node_parent;
-				// 	this->_node_ptr = this->_node_ptr->node_parent;
-				// }
 				left_minimum();
 			}
 
@@ -359,13 +334,11 @@ namespace ft
 						while (this->_node_ptr->node_left)
 							this->_node_ptr = this->_node_ptr->node_left;
 					}
-						// minimum(this->_node_ptr);
 					return ;
 				}
 				if (this->_node_ptr->node_right)
 				{
 					this->_node_ptr = this->_node_ptr->node_right;
-					// minimum(this->_node_ptr);
 					while (this->_node_ptr->node_left)
 						this->_node_ptr = this->_node_ptr->node_left;
 				}
@@ -375,31 +348,6 @@ namespace ft
 						this->_node_ptr = this->_node_ptr->node_parent;
 					this->_node_ptr = this->_node_ptr->node_parent;
 				}
-		// 		if (!_node_ptr)
-		// {
-		// 	_node_ptr = _root;
-		// 	if (_node_ptr)
-		// 	{
-		// 		while (_node_ptr->node_left)
-		// 			_node_ptr = _node_ptr->node_left;
-		// 	}
-
-		// 	return ;
-		// }
-
-		// if (_node_ptr->node_right)
-		// {
-		// 	_node_ptr = _node_ptr->node_right;
-		// 	while (_node_ptr->node_left)
-		// 		_node_ptr = _node_ptr->node_left;
-		// }
-		// else
-		// {
-		// 	while (_node_ptr->node_parent && _node_ptr == _node_ptr->node_parent->node_right)
-		// 		_node_ptr = _node_ptr->node_parent;
-
-		// 	_node_ptr = _node_ptr->node_parent;
-		// }
 			}
 
 			pointer minimum(pointer left_more)/////////////////////
@@ -644,20 +592,12 @@ namespace ft
 					if (s->red == BLACK)
 					{
 						if (s->node_right && s->node_right->red == RED)
-						{
-							//delete_case_RL_red_child(s, x);
-							
 							del_case_left_rotate(get_sibling(x), x);
-						}
 						else if (s->node_left && s->node_left->red == RED)
 						{
-							//bool color = s->node_left->red;
-							// s->node_left->red = s->node_right->red;
-							// s->node_right->red = color;
 							s->red = RED;
 							s->node_left->red = BLACK;
 							rotateRight(s);
-							//delete_case_RL_red_child(s, x);
 							del_case_left_rotate(get_sibling(x), x);
 						}
 						else
@@ -689,19 +629,12 @@ namespace ft
 					if (s->red == BLACK)
 					{
 						if (s->node_left && s->node_left->red == RED)
-						{
-							//delete_case_RL_red_child(s, x);
 							del_case_right_rotate(get_sibling(x), x);
-						}
 						else if (s->node_right && s->node_right->red == RED)
 						{
-							// bool color = s->node_right->red;
-							// s->node_right->red = s->node_left->red;
-							// s->node_left->red = color;
 							s->red = RED;
 							s->node_right->red = BLACK;
 							rotateLeft(s);
-							//delete_case_RL_red_child(s, x);
 							del_case_right_rotate(get_sibling(x), x);
 						}
 						else
@@ -806,8 +739,6 @@ namespace ft
 							delete_node(x);
 						}
 					}
-					// else //if (x->red == RED)
-					// 	delete_node(x);
 				}
 			}
 

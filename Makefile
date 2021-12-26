@@ -35,10 +35,10 @@ std: $(TEST_STD)
 $(TEST_STD): $(OBJS2)
 	$(CC) $(FLAGS) -I $(SFILE) $(OBJS2) -o $(TEST_STD)
 
-ft:
+ftrun:
 	/usr/bin/time -p ./$(TEST) $(SEED)
 
-std:
+stdrun:
 	/usr/bin/time -p ./$(TEST_STD) $(SEED)
 
 clean:

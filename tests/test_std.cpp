@@ -114,12 +114,20 @@ int main(int argc, char** argv) {
 		vector_int.push_back(i);
 	}
 
-	ft::set<int> s(vector_int.begin(), vector_int.end());
-
-	for (size_t i = 8000; i > 3000; i--)
+	for (size_t i = 0; i < 10000; i++)
 	{
-		s.erase(i);
+		map_int.insert(ft::make_pair(rand(), 100));
 	}
+	ft::map<int,int>::iterator it_b = map_int.begin();
+	ft::map<int,int>::iterator it_e = map_int.end();
+	map_int.erase(it_b, it_e);
+	
+	// ft::set<int> s(vector_int.begin(), vector_int.end());
+
+	// for (size_t i = 8000; i > 3000; i--)
+	// {
+	// 	s.erase(i);
+	// }
 
 	return (0);
 }

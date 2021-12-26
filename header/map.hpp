@@ -59,9 +59,6 @@ namespace ft
 																		m_compare(comp),
 																		m_alloc(alloc)
 			{
-				// this->m_container = value_compare(comp);
-				// this->m_compare = comp;
-				// this->m_alloc = alloc;
 			}
 			
 			template <class InputIterator>
@@ -146,7 +143,7 @@ namespace ft
 				return (m_container.get_size());
 			}
 
-			size_type max_size() const//////////////////
+			size_type max_size() const
 			{
 				return (m_container.get_alloc().max_size());
 			}
@@ -185,15 +182,11 @@ namespace ft
 			iterator insert(iterator position, const value_type& val)
 			{
 				return iterator(m_container.insert(position.base(), val), m_container.get_root());
-				//return iterator(m_container.insert(position.base(), val), m_container.get_root());
 			}
 
 			template <class InputIterator>
 			void insert(InputIterator first, InputIterator last)
 			{
-				// InputIterator it = first;
-				// for(; it != last; ++it)
-				// 	insert(*it);
 				while (first != last)
 				{
 					insert(*first);
@@ -260,7 +253,6 @@ namespace ft
 					return (1);
 				else
 					return (0);
-				//m_container.search_node(value) ? return (1) : return (0);
 			}
 
 			iterator lower_bound (const key_type& k)
@@ -281,10 +273,6 @@ namespace ft
 
 			iterator upper_bound(const key_type& k)
 			{
-				// ft::pair<const key_type, mapped_type> value = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
-				// node_pointer other = NULL;
-				// m_container.upper(value, m_container.get_root(), &other);
-				// return (iterator(other, m_container.get_root()));
 				node_pointer sougth = NULL;
 				ft::pair<const key_type, mapped_type> p = ft::make_pair<const key_type, mapped_type>(k, mapped_type());
 				m_container.upper(p, m_container.get_root(), &sougth);
@@ -318,22 +306,6 @@ namespace ft
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key, T, Compare, Alloc> &rhs)
 	{
-		// if (lhs.size() != rhs.size())
-		// 	return (false);
-		// else
-		// {
-		// 	iterator first1 = lhs.begin();
-		// 	iterator first2 = rhs.begin();
-		// 	iterator last1 = lhs.end();
-		// 	while (first1 != last1)
-		// 	{
-		// 		if (!(*first1 == *first2))
-		// 			return false;
-		// 		++first1;
-		// 		++first2;
-		// 	}
-		// 	return true;
-		// }
 		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
